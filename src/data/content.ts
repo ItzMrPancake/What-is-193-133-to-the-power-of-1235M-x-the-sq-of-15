@@ -1,6 +1,7 @@
 import { MaintenancePlan, ProjectItem, Testimonial, FaqItem } from '../types';
+import heroImage from '../assets/images/hero_developer_workspace_1792787895618.jpg';
 
-export const HERO_IMAGE = '/src/assets/images/hero_developer_workspace_1792787895618.jpg';
+export const HERO_IMAGE = heroImage;
 
 export const PLANS: MaintenancePlan[] = [
   {
