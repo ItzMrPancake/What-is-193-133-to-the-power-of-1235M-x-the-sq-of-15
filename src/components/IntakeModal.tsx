@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { X, Check, Copy, CheckCheck, Mail, ArrowRight } from 'lucide-react';
+import { X, Check, Copy, CheckCheck, Mail, ArrowRight, Phone, Loader2, ExternalLink } from 'lucide-react';
 import { PlanId } from '../types';
 import { PLANS, DEVELOPER_PROFILE } from '../data/content';
+import { sendEmailToJacob, getMailtoLink, getWebGmailLink, buildInquirySummary } from '../utils/sendInquiry';
 
 interface IntakeModalProps {
   isOpen: boolean;
@@ -19,9 +20,11 @@ export function IntakeModal({
   const [selectedPlanId, setSelectedPlanId] = useState<PlanId>(initialPlanId);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [editsEstimate, setEditsEstimate] = useState<number>(initialEdits);
   const [notes, setNotes] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +45,21 @@ export function IntakeModal({
 
   const currentPlan = PLANS.find((p) => p.id === selectedPlanId) || PLANS[1];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const payload = {
+    name,
+    email,
+    phone,
+    websiteUrl,
+    planOrService: `${currentPlan.name} ($${currentPlan.price}/month)`,
+    notesOrMessage: notes,
+    editsEstimate,
+  };
+
+  const mailtoLinkGmail = getMailtoLink(payload, DEVELOPER_PROFILE.email);
+  const mailtoLinkOutlook = getMailtoLink(payload, DEVELOPER_PROFILE.alternateEmail);
+  const webGmailLink = getWebGmailLink(payload);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim()) {
       setError('Please provide your name and a valid email address.');
@@ -52,33 +69,27 @@ export function IntakeModal({
       setError('Please enter a valid email address.');
       return;
     }
+
     setError(null);
+    setIsSubmitting(true);
+
+    // 1. Dispatch actual email directly to Jacob's inbox (jacobg.webdev@gmail.com)
+    await sendEmailToJacob(payload);
+
+    // 2. Also open their mail client directly as a fallback so they can review / send
+    try {
+      window.location.href = mailtoLinkGmail;
+    } catch {
+      // Ignored if browser blocks popup
+    }
+
+    setIsSubmitting(false);
     setSubmitted(true);
-  };
-
-  const getSummaryText = () => {
-    return `Hi Jacob,
-
-I'd like to get started with website maintenance.
-
-Selected Plan: ${currentPlan.name} ($${currentPlan.price}/month)
-${
-  currentPlan.id === 'plus'
-    ? 'Includes: 10 small updates + 1 big edit/mo (Extra edits: $3 small / $5 big)'
-    : 'Includes: 3 small updates/mo (Extra edits: $5/change)'
-}
-Client Name: ${name}
-Email: ${email}
-Website URL: ${websiteUrl || 'Not specified'}
-Estimated Monthly Updates: ${editsEstimate}
-Notes/Requirements: ${notes || 'None'}
-
-Please let me know the next steps for onboarding.`;
   };
 
   const handleCopySummary = async () => {
     try {
-      await navigator.clipboard.writeText(getSummaryText());
+      await navigator.clipboard.writeText(buildInquirySummary(payload));
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     } catch {
@@ -86,36 +97,52 @@ Please let me know the next steps for onboarding.`;
     }
   };
 
-  const mailtoLinkGmail = `mailto:${DEVELOPER_PROFILE.email}?subject=${encodeURIComponent(
-    `Maintenance Request: ${currentPlan.name} for ${name || 'New Client'}`
-  )}&body=${encodeURIComponent(getSummaryText())}`;
-
-  const mailtoLinkOutlook = `mailto:${DEVELOPER_PROFILE.alternateEmail}?subject=${encodeURIComponent(
-    `Maintenance Request: ${currentPlan.name} for ${name || 'New Client'}`
-  )}&body=${encodeURIComponent(getSummaryText())}`;
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in">
       <div className="relative w-full max-w-xl rounded-2xl border border-neutral-700 bg-neutral-950 p-6 sm:p-8 shadow-2xl max-h-[95vh] overflow-y-auto">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-white rounded-lg hover:bg-neutral-900"
+          className="cursor-pointer absolute top-4 right-4 p-2 text-neutral-400 hover:text-white rounded-lg hover:bg-neutral-900 transition-colors"
           aria-label="Close dialog"
         >
           <X className="h-5 w-5" />
         </button>
 
+        {/* Direct Contact Banner */}
+        <div className="mb-6 p-3 rounded-xl bg-amber-400/10 border border-amber-400/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div>
+            <div className="font-semibold text-amber-400">Direct Developer Access:</div>
+            <div className="text-neutral-300">Call or text Jacob George: <a href={`tel:${DEVELOPER_PROFILE.phone}`} className="font-mono text-white hover:underline">{DEVELOPER_PROFILE.phone}</a></div>
+          </div>
+          <div className="flex items-center gap-2">
+            <a
+              href={`mailto:${DEVELOPER_PROFILE.email}?subject=Website%20Maintenance%20Plan%20Inquiry`}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-400 text-neutral-950 font-bold text-[11px] hover:bg-amber-300 transition-colors"
+            >
+              <Mail className="h-3.5 w-3.5" />
+              Direct Email
+            </a>
+            <a
+              href={`tel:${DEVELOPER_PROFILE.phone}`}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-neutral-900 border border-neutral-700 text-white font-semibold text-[11px] hover:bg-neutral-800 transition-colors"
+            >
+              <Phone className="h-3.5 w-3.5 text-amber-400" />
+              Call Now
+            </a>
+          </div>
+        </div>
+
         {!submitted ? (
           <div>
             <div className="text-xs font-semibold tracking-wider uppercase text-amber-400 mb-1">
-              Start Your Plan · Direct With Jacob George
+              Start Your Plan With Jacob George
             </div>
             <h3 className="text-2xl font-bold text-white">
-              Website Maintenance Onboarding
+              Website Maintenance Setup
             </h3>
             <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-              No immediate credit card required. Fill in your details to begin your setup and free site health assessment.
+              No contracts or lock-in fees. Submitting this form sends your request directly to Jacob&apos;s personal inbox (<span className="text-neutral-200">{DEVELOPER_PROFILE.email}</span>) and opens your direct email.
             </p>
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -184,55 +211,77 @@ Please let me know the next steps for onboarding.`;
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="alex@company.com"
+                    placeholder="alex@domain.com"
                     className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
                   />
                 </div>
               </div>
 
-              {/* Website URL */}
+              {/* Website URL & Phone */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="intake-url" className="block text-xs font-medium text-neutral-300 mb-1">
+                    Website URL (or current platform)
+                  </label>
+                  <input
+                    id="intake-url"
+                    type="text"
+                    value={websiteUrl}
+                    onChange={(e) => setWebsiteUrl(e.target.value)}
+                    placeholder="https://mywebsite.com"
+                    className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="intake-phone" className="block text-xs font-medium text-neutral-300 mb-1">
+                    Phone (Optional for call/text)
+                  </label>
+                  <input
+                    id="intake-phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="e.g. 555-123-4567"
+                    className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Monthly edits expectation */}
               <div>
-                <label htmlFor="intake-url" className="block text-xs font-medium text-neutral-300 mb-1">
-                  Current Website Address
-                </label>
+                <div className="flex items-center justify-between text-xs mb-1">
+                  <label htmlFor="intake-edits" className="font-medium text-neutral-300">
+                    Typical Monthly Edits You Anticipate
+                  </label>
+                  <span className="font-mono text-amber-400 font-bold">
+                    ~{editsEstimate} updates/mo
+                  </span>
+                </div>
                 <input
-                  id="intake-url"
-                  type="text"
-                  value={websiteUrl}
-                  onChange={(e) => setWebsiteUrl(e.target.value)}
-                  placeholder="https://yourwebsite.com (or leave empty if new build)"
-                  className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
+                  id="intake-edits"
+                  type="range"
+                  min={1}
+                  max={25}
+                  value={editsEstimate}
+                  onChange={(e) => setEditsEstimate(Number(e.target.value))}
+                  className="w-full accent-amber-400 cursor-pointer h-1.5 bg-neutral-800 rounded-lg"
                 />
               </div>
 
-              {/* Notes */}
+              {/* Specific notes */}
               <div>
                 <label htmlFor="intake-notes" className="block text-xs font-medium text-neutral-300 mb-1">
-                  What updates or maintenance do you need help with?
+                  Notes, Current Hosting, or Priority Edits Needed
                 </label>
                 <textarea
                   id="intake-notes"
                   rows={3}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="e.g. Need monthly blog updates, price changes, and reliable hosting without downtime..."
+                  placeholder="Tell Jacob about your site (WordPress, Webflow, React, custom code, etc.) and what you'd like handled first..."
                   className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none resize-none"
                 />
-              </div>
-
-              {/* Plan terms reminder */}
-              <div className="rounded-lg bg-neutral-900/60 border border-neutral-800/80 p-3 text-[11px] text-neutral-400 space-y-1">
-                <div className="flex items-center gap-1.5 text-neutral-200 font-medium">
-                  <Check className="h-3.5 w-3.5 text-amber-400 shrink-0" />
-                  {currentPlan.name} (${currentPlan.price}/month)
-                </div>
-                <div>
-                  Includes web hosting, security patches, and up to{' '}
-                  {currentPlan.smallUpdatesLimit} small updates per month.
-                  {currentPlan.id === 'plus'
-                    ? ' Extra edits are discounted to only $3 per small update and $5 per big layout edit.'
-                    : ' Additional edits are $5 per small change.'}
-                </div>
               </div>
 
               {error && (
@@ -245,13 +294,23 @@ Please let me know the next steps for onboarding.`;
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full cursor-pointer rounded-xl bg-amber-400 py-3 px-4 text-xs font-bold text-neutral-950 hover:bg-amber-300 active:scale-[0.99] transition-all flex items-center justify-center gap-2"
+                  disabled={isSubmitting}
+                  className="w-full cursor-pointer rounded-xl bg-amber-400 py-3 px-4 text-xs font-bold text-neutral-950 hover:bg-amber-300 active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
                 >
-                  Confirm &amp; Send Request to Jacob
-                  <ArrowRight className="h-4 w-4" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Sending Directly to Jacob...
+                    </>
+                  ) : (
+                    <>
+                      Send Request to Jacob George ({DEVELOPER_PROFILE.email})
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
                 </button>
-                <div className="text-[11px] text-neutral-500 text-center mt-2">
-                  Jacob George reviews every request personally within 24 hours.
+                <div className="text-[11px] text-neutral-400 text-center mt-2">
+                  Direct dispatch to {DEVELOPER_PROFILE.email} &middot; Or call/text {DEVELOPER_PROFILE.phone}
                 </div>
               </div>
             </form>
@@ -263,44 +322,46 @@ Please let me know the next steps for onboarding.`;
             </div>
 
             <h3 className="text-2xl font-bold text-white">
-              Request Received!
+              Inquiry Dispatched!
             </h3>
             <p className="text-xs text-neutral-300 mt-2 max-w-sm mx-auto leading-relaxed">
-              Thank you, <span className="font-semibold text-white">{name}</span>. Jacob George has received your request for the{' '}
-              <span className="text-amber-400 font-semibold">{currentPlan.name}</span> (${currentPlan.price}/month).
+              Your message for the <span className="text-amber-400 font-semibold">{currentPlan.name}</span> has been sent directly to <span className="text-white font-medium">{DEVELOPER_PROFILE.email}</span>.
             </p>
 
             <div className="mt-6 rounded-xl bg-neutral-900 border border-neutral-800 p-4 text-left text-xs space-y-2">
               <div className="text-neutral-400 font-medium text-[11px] uppercase tracking-wider">
-                Submission Summary
+                Request Details
               </div>
               <div className="text-neutral-200">
                 <span className="text-neutral-400">Plan:</span> {currentPlan.name} (${currentPlan.price}/mo)
               </div>
               <div className="text-neutral-200">
-                <span className="text-neutral-400">Extra Edits Rate:</span>{' '}
-                {currentPlan.id === 'plus' ? '$3 small / $5 big' : '$5 per small edit'}
+                <span className="text-neutral-400">Client:</span> {name} ({email})
               </div>
-              <div className="text-neutral-200">
-                <span className="text-neutral-400">Email:</span> {email}
-              </div>
+              {phone && (
+                <div className="text-neutral-200">
+                  <span className="text-neutral-400">Phone:</span> {phone}
+                </div>
+              )}
               {websiteUrl && (
                 <div className="text-neutral-200">
                   <span className="text-neutral-400">Website:</span> {websiteUrl}
                 </div>
               )}
               <div className="text-neutral-200">
-                <span className="text-neutral-400">Turnaround:</span> 24–48 hours for onboarding setup
+                <span className="text-neutral-400">Turnaround:</span> Jacob personally responds within 24 hours
               </div>
             </div>
 
             <div className="mt-6 flex flex-wrap gap-2.5 justify-center">
               <a
-                href={mailtoLinkGmail}
+                href={webGmailLink}
+                target="_blank"
+                rel="noreferrer"
                 className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-3.5 py-2.5 text-xs font-bold text-neutral-950 hover:bg-amber-300 transition-colors"
               >
                 <Mail className="h-4 w-4" />
-                Email via Gmail
+                Open in Web Gmail
               </a>
 
               <a
@@ -309,6 +370,14 @@ Please let me know the next steps for onboarding.`;
               >
                 <Mail className="h-4 w-4 text-sky-400" />
                 Email via Outlook
+              </a>
+
+              <a
+                href={`tel:${DEVELOPER_PROFILE.phone}`}
+                className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg border border-neutral-700 bg-neutral-900 px-3.5 py-2.5 text-xs font-semibold text-neutral-200 hover:text-white hover:bg-neutral-800 transition-colors"
+              >
+                <Phone className="h-4 w-4 text-amber-400" />
+                Call / Text Jacob
               </a>
 
               <button
@@ -320,8 +389,9 @@ Please let me know the next steps for onboarding.`;
                 {copied ? 'Copied!' : 'Copy Summary'}
               </button>
             </div>
-            <div className="mt-3 text-[11px] text-neutral-400 text-center space-y-1">
-              <div>Jacob George ({DEVELOPER_PROFILE.email} · {DEVELOPER_PROFILE.alternateEmail})</div>
+
+            <div className="mt-4 text-[11px] text-neutral-400 text-center space-y-1">
+              <div>Jacob George ({DEVELOPER_PROFILE.email} &middot; {DEVELOPER_PROFILE.alternateEmail})</div>
               <div>Direct Phone / Text: <a href={`tel:${DEVELOPER_PROFILE.phone}`} className="text-amber-400 hover:underline font-mono">{DEVELOPER_PROFILE.phone}</a></div>
             </div>
 
@@ -329,7 +399,7 @@ Please let me know the next steps for onboarding.`;
               <button
                 type="button"
                 onClick={onClose}
-                className="text-xs text-neutral-400 hover:text-white"
+                className="cursor-pointer text-xs text-neutral-400 hover:text-white transition-colors"
               >
                 Close Window
               </button>

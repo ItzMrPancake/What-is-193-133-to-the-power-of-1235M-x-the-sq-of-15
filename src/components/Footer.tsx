@@ -78,9 +78,9 @@ export function Footer({ onNavigate }: FooterProps) {
             &copy; {new Date().getFullYear()} Jacob George. All rights reserved.
           </div>
           <div className="flex items-center gap-3">
-            <span>Basic: $20/mo ($5 extras)</span>
+            <span>Basic: $20/mo (Extras: $5 small / +$15 big)</span>
             <span>&middot;</span>
-            <span>Plus: $40/mo (Extras: $3 small / $5 big)</span>
+            <span>Plus: $40/mo (Extras: $3 small / +$10 big)</span>
           </div>
         </div>
       </div>

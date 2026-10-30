@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import { PlanId } from '../types';
+import { DEVELOPER_PROFILE } from '../data/content';
 
 interface NavbarProps {
   currentPage: 'home' | 'contact';
@@ -77,6 +78,15 @@ export function Navbar({ currentPage, onNavigate, onOpenIntake }: NavbarProps) {
 
         {/* Zone 3: 1 primary action */}
         <div className="hidden md:flex items-center gap-4 shrink-0">
+          <a
+            href={`tel:${DEVELOPER_PROFILE.phone}`}
+            className="text-xs text-neutral-300 hover:text-amber-400 transition-colors font-mono flex items-center gap-1.5"
+            title="Call or Text Jacob George"
+          >
+            <Phone className="h-3.5 w-3.5 text-amber-400" />
+            {DEVELOPER_PROFILE.phone}
+          </a>
+
           <button
             onClick={() => onOpenIntake('plus')}
             className="cursor-pointer rounded-lg bg-amber-400 px-4 py-2 text-xs font-semibold text-neutral-950 hover:bg-amber-300 active:scale-95 transition-all whitespace-nowrap shrink-0"
@@ -137,7 +147,7 @@ export function Navbar({ currentPage, onNavigate, onOpenIntake }: NavbarProps) {
             >
               Contact Page
             </button>
-            <div className="pt-2">
+            <div className="pt-2 space-y-2">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
@@ -147,6 +157,12 @@ export function Navbar({ currentPage, onNavigate, onOpenIntake }: NavbarProps) {
               >
                 Start a Plan
               </button>
+              <a
+                href={`tel:${DEVELOPER_PROFILE.phone}`}
+                className="block w-full rounded-lg border border-neutral-800 bg-neutral-900 py-2 text-center text-xs font-mono text-amber-400 hover:text-white transition-all"
+              >
+                Call / Text: {DEVELOPER_PROFILE.phone}
+              </a>
             </div>
           </div>
         </div>

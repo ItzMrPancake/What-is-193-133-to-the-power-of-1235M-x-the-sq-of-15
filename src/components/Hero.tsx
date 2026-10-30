@@ -1,5 +1,5 @@
-import { ArrowRight, ShieldCheck, CheckCircle2, Clock } from 'lucide-react';
-import { HERO_IMAGE } from '../data/content';
+import { ArrowRight, ShieldCheck, CheckCircle2, Clock, Mail, Phone } from 'lucide-react';
+import { HERO_IMAGE, DEVELOPER_PROFILE } from '../data/content';
 import { PlanId } from '../types';
 
 interface HeroProps {
@@ -60,8 +60,21 @@ export function Hero({ onOpenIntake }: HeroProps) {
                 onClick={() => onOpenIntake('basic')}
                 className="cursor-pointer inline-flex items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 px-5 py-3.5 text-sm font-medium text-neutral-200 hover:bg-neutral-800 hover:text-white transition-colors whitespace-nowrap"
               >
-                Request Free Site Assessment
+                Start Maintenance Setup
               </button>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-neutral-400">
+              <span className="text-neutral-500">Direct contact:</span>
+              <a href={`tel:${DEVELOPER_PROFILE.phone}`} className="text-amber-400 hover:underline font-mono flex items-center gap-1">
+                <Phone className="h-3 w-3" />
+                {DEVELOPER_PROFILE.phone}
+              </a>
+              <span className="text-neutral-700">&middot;</span>
+              <a href={`mailto:${DEVELOPER_PROFILE.email}?subject=Website%20Maintenance%20Inquiry`} className="text-neutral-300 hover:text-amber-400 transition-colors flex items-center gap-1">
+                <Mail className="h-3 w-3 text-amber-400" />
+                {DEVELOPER_PROFILE.email}
+              </a>
             </div>
 
             {/* Unboxed Trust Markers with clean typographic separators */}

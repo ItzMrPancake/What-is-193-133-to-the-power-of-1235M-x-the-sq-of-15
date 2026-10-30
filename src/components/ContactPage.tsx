@@ -13,9 +13,11 @@ import {
   Globe,
   Sparkles,
   HelpCircle,
+  Loader2,
 } from 'lucide-react';
 import { DEVELOPER_PROFILE, PLANS } from '../data/content';
 import { PlanId } from '../types';
+import { sendEmailToJacob, getMailtoLink, getWebGmailLink, buildInquirySummary } from '../utils/sendInquiry';
 
 interface ContactPageProps {
   onNavigateHome: () => void;
@@ -31,6 +33,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [timeline, setTimeline] = useState('immediate');
   const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -43,20 +46,6 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
     } catch {
       // Fallback
     }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim() || !message.trim()) {
-      setError('Please provide your name, email address, and a brief message.');
-      return;
-    }
-    if (!email.includes('@') || !email.includes('.')) {
-      setError('Please provide a valid email address.');
-      return;
-    }
-    setError(null);
-    setSubmitted(true);
   };
 
   const getServiceLabel = () => {
@@ -74,27 +63,47 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
     }
   };
 
-  const formattedSummary = `Hi Jacob,
+  const payload = {
+    name,
+    email,
+    phone,
+    websiteUrl,
+    planOrService: getServiceLabel(),
+    notesOrMessage: message,
+    timeline,
+  };
 
-I'm contacting you via your website contact page.
+  const mailtoGmail = getMailtoLink(payload, DEVELOPER_PROFILE.email);
+  const mailtoOutlook = getMailtoLink(payload, DEVELOPER_PROFILE.alternateEmail);
+  const webGmailLink = getWebGmailLink(payload);
 
-Name: ${name}
-Email: ${email}
-Phone: ${phone || 'Not provided'}
-Company / Brand: ${company || 'N/A'}
-Website: ${websiteUrl || 'New build / not yet launched'}
-Service Needed: ${getServiceLabel()}
-Desired Timeline: ${timeline}
-Details:
-${message}`;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      setError('Please provide your name, email address, and a brief message.');
+      return;
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      setError('Please provide a valid email address.');
+      return;
+    }
 
-  const mailtoGmail = `mailto:${DEVELOPER_PROFILE.email}?subject=${encodeURIComponent(
-    `Inquiry from ${name}: ${getServiceLabel()}`
-  )}&body=${encodeURIComponent(formattedSummary)}`;
+    setError(null);
+    setIsSubmitting(true);
 
-  const mailtoOutlook = `mailto:${DEVELOPER_PROFILE.alternateEmail}?subject=${encodeURIComponent(
-    `Inquiry from ${name}: ${getServiceLabel()}`
-  )}&body=${encodeURIComponent(formattedSummary)}`;
+    // 1. Dispatch actual email directly to Jacob's inbox (jacobg.webdev@gmail.com)
+    await sendEmailToJacob(payload);
+
+    // 2. Also trigger email client as an instant direct backup
+    try {
+      window.location.href = mailtoGmail;
+    } catch {
+      // Ignored if browser blocks popup
+    }
+
+    setIsSubmitting(false);
+    setSubmitted(true);
+  };
 
   return (
     <div className="py-12 lg:py-20">
@@ -494,13 +503,28 @@ ${message}`;
 
                 <button
                   type="submit"
-                  className="w-full cursor-pointer rounded-xl bg-amber-400 py-3.5 px-4 text-xs font-bold text-neutral-950 hover:bg-amber-300 active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/20"
+                  disabled={isSubmitting}
+                  className="w-full cursor-pointer rounded-xl bg-amber-400 py-3.5 px-4 text-xs font-bold text-neutral-950 hover:bg-amber-300 active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/20 disabled:opacity-60"
                 >
-                  <Send className="h-4 w-4" />
-                  Send Inquiry to Jacob George
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Sending Directly to Jacob...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4" />
+                      Send Inquiry Directly to Jacob George ({DEVELOPER_PROFILE.email})
+                    </>
+                  )}
                 </button>
-                <div className="text-[11px] text-neutral-500 text-center">
-                  Direct reply guaranteed within 24 hours · No spam, ever
+                <div className="text-[11px] text-neutral-400 text-center flex flex-wrap items-center justify-center gap-2">
+                  <span>Direct phone / text:</span>
+                  <a href={`tel:${DEVELOPER_PROFILE.phone}`} className="text-amber-400 font-mono hover:underline">
+                    {DEVELOPER_PROFILE.phone}
+                  </a>
+                  <span>&middot;</span>
+                  <span>Direct reply guaranteed within 24 hours</span>
                 </div>
               </form>
             ) : (
@@ -509,26 +533,28 @@ ${message}`;
                   <Check className="h-6 w-6" />
                 </div>
                 <h2 className="text-2xl font-bold text-white">
-                  Message Dispatched!
+                  Inquiry Dispatched to Jacob George!
                 </h2>
                 <p className="text-xs text-neutral-300 mt-2 max-w-md mx-auto leading-relaxed">
                   Thank you, <span className="font-semibold text-white">{name}</span>. Your inquiry for{' '}
-                  <span className="text-amber-400 font-semibold">{getServiceLabel()}</span> has been recorded. Jacob will reply directly to{' '}
-                  <span className="text-white font-medium">{email}</span> within 24 hours.
+                  <span className="text-amber-400 font-semibold">{getServiceLabel()}</span> has been sent directly to{' '}
+                  <span className="text-white font-medium">{DEVELOPER_PROFILE.email}</span>. Jacob will personally review it and reply within 24 hours.
                 </p>
 
-                {/* Email client direct options */}
-                <div className="mt-8 p-4 rounded-xl bg-neutral-950 border border-neutral-800 text-left">
-                  <div className="text-xs font-semibold text-neutral-300 mb-2">
-                    Want to send this directly from your email app?
+                {/* Direct quick action buttons */}
+                <div className="mt-8 p-5 rounded-xl bg-neutral-950 border border-neutral-800 text-left">
+                  <div className="text-xs font-semibold text-neutral-300 mb-3">
+                    Want to follow up or send directly from your preferred app?
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2.5">
                     <a
-                      href={mailtoGmail}
+                      href={webGmailLink}
+                      target="_blank"
+                      rel="noreferrer"
                       className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-amber-400 px-3.5 py-2 text-xs font-bold text-neutral-950 hover:bg-amber-300 transition-colors"
                     >
                       <Mail className="h-3.5 w-3.5" />
-                      Open in Gmail ({DEVELOPER_PROFILE.email})
+                      Open in Web Gmail
                     </a>
                     <a
                       href={mailtoOutlook}
@@ -536,6 +562,13 @@ ${message}`;
                     >
                       <Mail className="h-3.5 w-3.5 text-sky-400" />
                       Open in Outlook
+                    </a>
+                    <a
+                      href={`tel:${DEVELOPER_PROFILE.phone}`}
+                      className="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-900 px-3.5 py-2 text-xs font-semibold text-neutral-200 hover:text-white hover:bg-neutral-800 transition-colors"
+                    >
+                      <Phone className="h-3.5 w-3.5 text-amber-400" />
+                      Call / Text Jacob ({DEVELOPER_PROFILE.phone})
                     </a>
                   </div>
                 </div>
@@ -547,7 +580,7 @@ ${message}`;
                       setSubmitted(false);
                       setMessage('');
                     }}
-                    className="text-xs text-neutral-400 hover:text-white underline underline-offset-4"
+                    className="text-xs text-neutral-400 hover:text-white underline underline-offset-4 cursor-pointer"
                   >
                     Send another message
                   </button>
@@ -555,7 +588,7 @@ ${message}`;
                   <button
                     type="button"
                     onClick={onNavigateHome}
-                    className="text-xs text-amber-400 hover:text-amber-300"
+                    className="text-xs text-amber-400 hover:text-amber-300 cursor-pointer"
                   >
                     Return to Homepage &rarr;
                   </button>

@@ -1,5 +1,5 @@
-import { Check, Sparkles, HelpCircle, ArrowRight } from 'lucide-react';
-import { PLANS } from '../data/content';
+import { Check, Sparkles, HelpCircle, ArrowRight, Mail, Phone } from 'lucide-react';
+import { PLANS, DEVELOPER_PROFILE } from '../data/content';
 import { PlanId } from '../types';
 
 interface MaintenancePlansProps {
@@ -146,6 +146,24 @@ export function MaintenancePlans({ onOpenIntake, onOpenScopeGuide }: Maintenance
                     {isPlus
                       ? 'Includes 10 small + 1 big edit · Extras only $3 small / $5 big'
                       : 'Includes 3 small updates · Extras $5/edit'}
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-neutral-800/60 flex items-center justify-center gap-3 text-[11px] text-neutral-400">
+                    <a
+                      href={`mailto:${DEVELOPER_PROFILE.email}?subject=Direct%20Signup:%20${encodeURIComponent(plan.name)}`}
+                      className="hover:text-amber-400 transition-colors flex items-center gap-1"
+                    >
+                      <Mail className="h-3 w-3 text-amber-400" />
+                      Email Direct
+                    </a>
+                    <span className="text-neutral-700">&middot;</span>
+                    <a
+                      href={`tel:${DEVELOPER_PROFILE.phone}`}
+                      className="hover:text-amber-400 transition-colors flex items-center gap-1 font-mono"
+                    >
+                      <Phone className="h-3 w-3 text-amber-400" />
+                      {DEVELOPER_PROFILE.phone}
+                    </a>
                   </div>
                 </div>
               </div>

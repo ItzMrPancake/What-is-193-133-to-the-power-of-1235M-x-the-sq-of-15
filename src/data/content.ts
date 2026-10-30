@@ -19,12 +19,13 @@ export const PLANS: MaintenancePlan[] = [
     smallUpdatesLimit: 3,
     layoutEditsLimit: 0,
     extraSmallEditCost: 5,
-    extraEditCostNote: '$5 / small change or additional edit after 3 monthly updates',
+    extraBigEditCost: 15,
+    extraEditCostNote: 'Extra small edits: $5 · Major layout edits: only +$15 each',
     idealFor: 'Landing pages, local service websites, and portfolios that need steady monthly upkeep.',
     highlights: [
       '3 small text/photo updates included',
       'Hosting & security covered',
-      '$5 / small change for additional edits',
+      'Extra small edits: $5 · Major layout edits: +$15',
     ],
   },
   {
@@ -40,18 +41,18 @@ export const PLANS: MaintenancePlan[] = [
       'Comprehensive security updates & daily backups',
       'Up to 10 small updates per month included',
       '1 major layout edit per month included',
-      'Discounted extra edits: only $3/small and $5/big',
+      'Discounted extra edits: only $3/small and +$10/big',
       'Monthly performance & health report',
     ],
     smallUpdatesLimit: 10,
     layoutEditsLimit: 1,
     extraSmallEditCost: 3,
-    extraBigEditCost: 5,
-    extraEditCostNote: 'Extra Edits on Plus: only $3 per small update and $5 per big layout edit',
+    extraBigEditCost: 10,
+    extraEditCostNote: '1 major layout edit included every month. Extra edits: only $3/small and +$10/big',
     idealFor: 'Growing businesses, active storefronts, and brands that regularly refresh content and layouts.',
     highlights: [
       '10 small updates + 1 major layout edit included',
-      'Discounted extra edits: $3 small / $5 big',
+      'Extra edits: only $3 small / +$10 big',
       'Priority turnaround queue',
     ],
   },
@@ -162,7 +163,7 @@ export const TESTIMONIALS: Testimonial[] = [
 export const FAQS: FaqItem[] = [
   {
     question: 'How do extra edits work on the Basic Plan vs. Plus Plan?',
-    answer: 'On the Basic Plan ($20/mo), you get up to 3 small updates included, and additional changes are a flat $5 per small edit. On the Plus Plan ($40/mo), you get 10 small updates and 1 major layout edit included; extra edits after the limit are discounted to only $3 per small update and $5 per big layout edit.',
+    answer: 'On the Basic Plan ($20/mo), you get up to 3 small updates included; extra small edits are $5 each, and major layout edits are only +$15 each. On the Plus Plan ($40/mo), you get 10 small updates and 1 major layout edit already included; extra small updates are discounted to only $3 each, and extra big layout edits are only +$10 each.',
     category: 'plans',
   },
   {
@@ -171,8 +172,8 @@ export const FAQS: FaqItem[] = [
     category: 'plans',
   },
   {
-    question: 'What is a "major layout edit" / "big edit" included in the Plus Plan?',
-    answer: 'A major (big) layout edit involves restructuring an existing section, adding a brand-new interactive block (such as an accordion FAQ, a new lead capture form, or a comparison table), or revamping a header/footer layout. In the Plus Plan, you get 1 major layout edit included every month, and any extra big edits are only $5 each.',
+    question: 'What is a "major layout edit" / "big edit"?',
+    answer: 'A major (big) layout edit involves restructuring an existing section, adding a brand-new interactive block (such as an accordion FAQ, a new lead capture form, or a comparison table), or revamping a header/footer layout. In the Plus Plan, you get 1 major layout edit included every month (extra big edits are +$10 each). On the Basic Plan, you can add a major layout edit for just +$15 each.',
     category: 'plans',
   },
   {

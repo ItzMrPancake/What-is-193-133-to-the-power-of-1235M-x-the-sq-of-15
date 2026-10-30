@@ -12,20 +12,20 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
 
   // Calculation logic:
   // Basic Plan: $20 base covers 3 small updates, 0 big layout edits. Extra small edits = $5 each.
-  // Ad-hoc big layout edits on Basic are $25 each.
+  // Major layout edits on Basic are +$15 each.
   const basicIncludedSmall = 3;
   const basicExtraSmall = Math.max(0, smallEdits - basicIncludedSmall);
-  const basicBigCost = bigEdits * 25;
+  const basicBigCost = bigEdits * 15;
   const basicTotal = 20 + basicExtraSmall * 5 + basicBigCost;
 
   // Plus Plan: $40 base covers 10 small updates + 1 big layout edit.
   // Extra small edits on Plus: ONLY $3 each!
-  // Extra big layout edits on Plus: ONLY $5 each!
+  // Extra big layout edits on Plus: ONLY +$10 each!
   const plusIncludedSmall = 10;
   const plusIncludedBig = 1;
   const plusExtraSmall = Math.max(0, smallEdits - plusIncludedSmall);
   const plusExtraBig = Math.max(0, bigEdits - plusIncludedBig);
-  const plusTotal = 40 + plusExtraSmall * 3 + plusExtraBig * 5;
+  const plusTotal = 40 + plusExtraSmall * 3 + plusExtraBig * 10;
 
   const bestPlan: PlanId = basicTotal < plusTotal ? 'basic' : 'plus';
   const savings = Math.abs(basicTotal - plusTotal);
@@ -41,7 +41,7 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
             Calculate your monthly maintenance cost
           </h2>
           <p className="mt-4 text-base text-neutral-400 leading-relaxed">
-            Estimate your monthly updates to see exactly how much you will pay. On the Plus Plan, extra edits are heavily discounted at only <span className="text-amber-400 font-semibold">$3/small</span> and <span className="text-amber-400 font-semibold">$5/big</span>.
+            Estimate your monthly updates to see exactly how much you will pay. On the Plus Plan, extra edits are heavily discounted at only <span className="text-amber-400 font-semibold">$3/small</span> and <span className="text-amber-400 font-semibold">+$10/big</span>.
           </p>
         </div>
 
@@ -118,7 +118,7 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                 </div>
               </div>
               <div className="text-[11px] text-amber-400/90 bg-amber-400/10 p-2 rounded border border-amber-400/20 mt-3">
-                1 big edit is already included in Plus Plan ($40). Any extra big edits on Plus are only $5 each!
+                1 big edit is already included in Plus Plan ($40). Any extra big edits on Plus are only +$10 each (versus +$15 on Basic)!
               </div>
             </div>
 
@@ -213,7 +213,7 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                 </div>
                 {bigEdits > 0 && (
                   <div className="flex justify-between text-neutral-300">
-                    <span>Big edits ({bigEdits} &times; $25):</span>
+                    <span>Big edits ({bigEdits} &times; $15):</span>
                     <span className="font-mono tabular-nums">${basicBigCost}</span>
                   </div>
                 )}
@@ -275,10 +275,10 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                 </div>
                 <div className="flex justify-between text-amber-300 font-medium">
                   <span>
-                    Extra big ({plusExtraBig} &times; $5):
+                    Extra big ({plusExtraBig} &times; $10):
                   </span>
                   <span className="font-mono tabular-nums">
-                    ${plusExtraBig * 5}
+                    ${plusExtraBig * 10}
                   </span>
                 </div>
               </div>
@@ -303,7 +303,7 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                 <Check className="h-4 w-4 text-amber-400 shrink-0" />
                 <span className="text-neutral-300">
                   {bestPlan === 'plus'
-                    ? `Plus Plan gives you 10 small + 1 big included, and ultra-cheap extra edits ($3 small, $5 big).`
+                    ? `Plus Plan gives you 10 small + 1 big included, and ultra-cheap extra edits ($3 small, +$10 big).`
                     : `Basic Plan is optimal for lower monthly update frequency.`}
                 </span>
               </div>
