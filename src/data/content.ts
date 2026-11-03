@@ -1,6 +1,10 @@
 import { MaintenancePlan, ProjectItem, Testimonial, FaqItem } from '../types';
+import heroImage from '../assets/images/hero_developer_workspace_1792787895618.jpg';
+import archStudioImage from '../assets/images/showcase_arch_studio_1792787896663.jpg';
+import artisanCoffeeImage from '../assets/images/showcase_artisan_coffee_1792787897466.jpg';
+import saasPlatformImage from '../assets/images/showcase_saas_platform_1792787897450.jpg';
 
-export const HERO_IMAGE = '/src/assets/images/hero_developer_workspace_1792787895618.jpg';
+export const HERO_IMAGE = heroImage;
 
 export const PLANS: MaintenancePlan[] = [
   {
@@ -64,7 +68,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Archetype Architectural Studio',
     client: 'Archetype Studio AG',
     category: 'Architecture & Design',
-    image: '/src/assets/images/showcase_arch_studio_1792787896663.jpg',
+    image: archStudioImage,
     summary: 'A minimalist digital showcase with bespoke project grid, dark-mode styling, and sub-second page transitions.',
     metrics: [
       { label: 'Page Speed', value: '99/100' },
@@ -79,7 +83,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Terra & Grain Specialty Coffee',
     client: 'Terra & Grain Roasters',
     category: 'E-Commerce Storefront',
-    image: '/src/assets/images/showcase_artisan_coffee_1792787897466.jpg',
+    image: artisanCoffeeImage,
     summary: 'High-conversion artisanal storefront featuring weekly single-origin drops, roast profile cards, and customer subscriptions.',
     metrics: [
       { label: 'Checkout Conversion', value: '+28%' },
@@ -94,7 +98,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Nexus Analytics Dashboard Web App',
     client: 'Nexus Cloud Technologies',
     category: 'SaaS & Web Application',
-    image: '/src/assets/images/showcase_saas_platform_1792787897450.jpg',
+    image: saasPlatformImage,
     summary: 'Responsive marketing platform and client portal interface designed for high reliability, live chart widgets, and zero downtime.',
     metrics: [
       { label: 'Bounce Rate', value: '-35%' },
