@@ -17,7 +17,13 @@ import {
 } from 'lucide-react';
 import { DEVELOPER_PROFILE, PLANS } from '../data/content';
 import { PlanId } from '../types';
-import { sendEmailToJacob, getMailtoLink, getWebGmailLink, buildInquirySummary } from '../utils/sendInquiry';
+import {
+  getMailtoLink,
+  getWebGmailLink,
+  getWebOutlookLink,
+  dispatchMailtoUniversal,
+  buildInquirySummary,
+} from '../utils/sendInquiry';
 
 interface ContactPageProps {
   onNavigateHome: () => void;
@@ -73,36 +79,15 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
     timeline,
   };
 
-  const mailtoGmail = getMailtoLink(payload, DEVELOPER_PROFILE.email);
-  const mailtoOutlook = getMailtoLink(payload, DEVELOPER_PROFILE.alternateEmail);
+  const mailtoGmail = getMailtoLink(payload);
   const webGmailLink = getWebGmailLink(payload);
+  const webOutlookLink = getWebOutlookLink(payload);
+  const [mailAppAttempted, setMailAppAttempted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLaunchDeviceMail = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !message.trim()) {
-      setError('Please provide your name, email address, and a brief message.');
-      return;
-    }
-    if (!email.includes('@') || !email.includes('.')) {
-      setError('Please provide a valid email address.');
-      return;
-    }
-
-    setError(null);
-    setIsSubmitting(true);
-
-    // 1. Dispatch actual email directly to Jacob's inbox (jacobg.webdev@gmail.com)
-    await sendEmailToJacob(payload);
-
-    // 2. Also trigger email client as an instant direct backup
-    try {
-      window.location.href = mailtoGmail;
-    } catch {
-      // Ignored if browser blocks popup
-    }
-
-    setIsSubmitting(false);
-    setSubmitted(true);
+    setMailAppAttempted(true);
+    dispatchMailtoUniversal(mailtoGmail);
   };
 
   return (
@@ -306,8 +291,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left: Contact Form */}
           <div className="lg:col-span-7 rounded-2xl border border-neutral-800 bg-neutral-900/70 p-6 sm:p-8 shadow-xl">
-            {!submitted ? (
-              <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
                 <div>
                   <h2 className="text-xl font-bold text-white">
                     Send Jacob a Project Inquiry
@@ -501,101 +485,79 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                   </div>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full cursor-pointer rounded-xl bg-amber-400 py-3.5 px-4 text-xs font-bold text-neutral-950 hover:bg-amber-300 active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/20 disabled:opacity-60"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Sending Directly to Jacob...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4" />
-                      Send Inquiry Directly to Jacob George ({DEVELOPER_PROFILE.email})
-                    </>
+                {/* THE ONLY TWO SEND OPTIONS */}
+                <div className="pt-2 space-y-2.5">
+                  <div className="text-xs font-bold text-neutral-200 uppercase tracking-wider text-center mb-1">
+                    Choose Your Sending Method:
+                  </div>
+
+                  {/* Button 1: Send via Gmail */}
+                  <a
+                    href={webGmailLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full cursor-pointer rounded-xl bg-amber-400 py-3.5 px-4 text-xs font-bold text-neutral-950 hover:bg-amber-300 active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/20 text-center"
+                  >
+                    <Mail className="h-4 w-4" />
+                    <span>Send via Gmail</span>
+                    <span className="text-[11px] font-normal opacity-80">(Opens Web Gmail)</span>
+                  </a>
+
+                  {/* Button 2: Send via Device Mail App */}
+                  <button
+                    type="button"
+                    onClick={handleLaunchDeviceMail}
+                    className="w-full cursor-pointer rounded-xl border border-neutral-700 bg-neutral-900 py-3.5 px-4 text-xs font-bold text-white hover:bg-neutral-800 active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-center shadow-md"
+                  >
+                    <Phone className="h-4 w-4 text-sky-400" />
+                    <span>Send via Mail App on Your Device</span>
+                    <span className="text-[11px] font-normal text-neutral-400">(iPhone, Mac, Android, PC)</span>
+                  </button>
+
+                  {/* Fallback box if computer lacks configured desktop email software */}
+                  {mailAppAttempted && (
+                    <div className="p-3 rounded-xl bg-neutral-900/90 border border-neutral-700 text-xs text-neutral-300 space-y-2 animate-in fade-in">
+                      <div className="flex items-center gap-1.5 text-amber-400 font-medium">
+                        <HelpCircle className="h-3.5 w-3.5" />
+                        Did your device mail app not open?
+                      </div>
+                      <p className="text-[11px] text-neutral-400 leading-relaxed">
+                        Many desktop PCs and browsers don&apos;t have a default email application configured. Click below to open in <strong>Outlook Web</strong> or <strong>Gmail</strong>:
+                      </p>
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        <a
+                          href={webOutlookLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs font-medium hover:bg-sky-500/30 transition-colors"
+                        >
+                          <Mail className="h-3.5 w-3.5" />
+                          Open in Outlook Web &rarr;
+                        </a>
+                        <a
+                          href={webGmailLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-medium hover:bg-amber-400/30 transition-colors"
+                        >
+                          <Mail className="h-3.5 w-3.5" />
+                          Open in Gmail &rarr;
+                        </a>
+                      </div>
+                    </div>
                   )}
-                </button>
-                <div className="text-[11px] text-neutral-400 text-center flex flex-wrap items-center justify-center gap-2">
+                </div>
+
+                <div className="text-[11px] text-neutral-400 text-center flex flex-wrap items-center justify-center gap-2 pt-2">
                   <span>Direct phone / text:</span>
-                  <a href={`tel:${DEVELOPER_PROFILE.phone}`} className="text-amber-400 font-mono hover:underline">
-                    {DEVELOPER_PROFILE.phone}
+                  <a href={`tel:${DEVELOPER_PROFILE.phone}`} className="text-amber-400 font-mono hover:underline font-bold">
+                    {DEVELOPER_PROFILE.phoneFormatted}
                   </a>
                   <span>&middot;</span>
-                  <span>Direct reply guaranteed within 24 hours</span>
+                  <span>Direct reply within 24–48 hours</span>
                 </div>
               </form>
-            ) : (
-              <div className="py-8 text-center">
-                <div className="mx-auto w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
-                  <Check className="h-6 w-6" />
-                </div>
-                <h2 className="text-2xl font-bold text-white">
-                  Inquiry Dispatched to Jacob George!
-                </h2>
-                <p className="text-xs text-neutral-300 mt-2 max-w-md mx-auto leading-relaxed">
-                  Thank you, <span className="font-semibold text-white">{name}</span>. Your inquiry for{' '}
-                  <span className="text-amber-400 font-semibold">{getServiceLabel()}</span> has been sent directly to{' '}
-                  <span className="text-white font-medium">{DEVELOPER_PROFILE.email}</span>. Jacob will personally review it and reply within 24 hours.
-                </p>
-
-                {/* Direct quick action buttons */}
-                <div className="mt-8 p-5 rounded-xl bg-neutral-950 border border-neutral-800 text-left">
-                  <div className="text-xs font-semibold text-neutral-300 mb-3">
-                    Want to follow up or send directly from your preferred app?
-                  </div>
-                  <div className="flex flex-wrap gap-2.5">
-                    <a
-                      href={webGmailLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-amber-400 px-3.5 py-2 text-xs font-bold text-neutral-950 hover:bg-amber-300 transition-colors"
-                    >
-                      <Mail className="h-3.5 w-3.5" />
-                      Open in Web Gmail
-                    </a>
-                    <a
-                      href={mailtoOutlook}
-                      className="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-900 px-3.5 py-2 text-xs font-semibold text-neutral-200 hover:text-white hover:bg-neutral-800 transition-colors"
-                    >
-                      <Mail className="h-3.5 w-3.5 text-sky-400" />
-                      Open in Outlook
-                    </a>
-                    <a
-                      href={`tel:${DEVELOPER_PROFILE.phone}`}
-                      className="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-900 px-3.5 py-2 text-xs font-semibold text-neutral-200 hover:text-white hover:bg-neutral-800 transition-colors"
-                    >
-                      <Phone className="h-3.5 w-3.5 text-amber-400" />
-                      Call / Text Jacob ({DEVELOPER_PROFILE.phone})
-                    </a>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex items-center justify-center gap-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSubmitted(false);
-                      setMessage('');
-                    }}
-                    className="text-xs text-neutral-400 hover:text-white underline underline-offset-4 cursor-pointer"
-                  >
-                    Send another message
-                  </button>
-                  <span className="text-neutral-700">&middot;</span>
-                  <button
-                    type="button"
-                    onClick={onNavigateHome}
-                    className="text-xs text-amber-400 hover:text-amber-300 cursor-pointer"
-                  >
-                    Return to Homepage &rarr;
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
 
           {/* Right: What to Expect & FAQ */}
           <div className="lg:col-span-5 space-y-6">

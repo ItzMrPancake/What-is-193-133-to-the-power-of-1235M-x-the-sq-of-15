@@ -97,15 +97,16 @@ export function Hero({ onOpenIntake }: HeroProps) {
 
           {/* Right Column: Visual Focal Carrier */}
           <div className="lg:col-span-5 flex items-center">
-            <div className="relative w-full rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 shadow-2xl">
-              <div className="aspect-[16/10] relative overflow-hidden">
+            <div className="relative w-full rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 shadow-2xl group">
+              <div className="aspect-[16/9] relative overflow-hidden bg-neutral-950">
                 <img
                   src={HERO_IMAGE}
-                  alt="Jacob George web development setup showing responsive code and modern site interfaces"
-                  className="w-full h-full object-cover"
+                  alt="Jacob George web development workspace showing responsive code and modern site interfaces"
+                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
+                  loading="eager"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/90 via-neutral-950/20 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/60 via-transparent to-transparent pointer-events-none"></div>
               </div>
 
               {/* Surface caption info */}

@@ -1,8 +1,8 @@
 import { DEVELOPER_PROFILE } from '../data/content';
 
 export interface InquiryPayload {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   phone?: string;
   websiteUrl?: string;
   planOrService: string;
@@ -12,72 +12,104 @@ export interface InquiryPayload {
 }
 
 export function buildInquirySummary(payload: InquiryPayload): string {
-  return `Hi Jacob,
+  const lines: string[] = [
+    `Hi Jacob,`,
+    ``,
+    `I am interested in website development and monthly maintenance.`,
+    ``,
+    `----------------------------------------`,
+    `REQUEST DETAILS:`,
+    `Plan / Service: ${payload.planOrService}`,
+  ];
 
-I'd like to get in touch regarding website development / maintenance.
+  if (payload.name) {
+    lines.push(`My Name: ${payload.name}`);
+  }
+  if (payload.email) {
+    lines.push(`My Email: ${payload.email}`);
+  }
+  if (payload.phone) {
+    lines.push(`My Phone: ${payload.phone}`);
+  }
+  if (payload.websiteUrl) {
+    lines.push(`Current Website: ${payload.websiteUrl}`);
+  }
+  if (payload.timeline) {
+    lines.push(`Desired Start Timeline: ${payload.timeline}`);
+  }
+  if (payload.editsEstimate) {
+    lines.push(`Estimated Monthly Updates: ~${payload.editsEstimate}/month`);
+  }
+  if (payload.notesOrMessage) {
+    lines.push(``, `Project Notes & Goals:`, payload.notesOrMessage);
+  }
 
-Name: ${payload.name}
-Email: ${payload.email}
-Phone: ${payload.phone || 'Not provided'}
-Website: ${payload.websiteUrl || 'New build / not yet launched'}
-Plan / Service: ${payload.planOrService}
-${payload.timeline ? `Desired Timeline: ${payload.timeline}` : ''}
-${payload.editsEstimate ? `Estimated Monthly Updates: ${payload.editsEstimate}` : ''}
-${payload.notesOrMessage ? `Details & Notes:\n${payload.notesOrMessage}` : ''}
+  lines.push(
+    ``,
+    `----------------------------------------`,
+    `Please let me know the next steps for getting started!`,
+    `Thanks!`
+  );
 
-Looking forward to hearing from you!`;
+  return lines.join('\n');
 }
 
-export function getMailtoLink(payload: InquiryPayload, toEmail: string = DEVELOPER_PROFILE.email): string {
-  const subject = `Website Inquiry from ${payload.name || 'New Client'}: ${payload.planOrService}`;
+export const PRIMARY_RECIPIENT_EMAIL = 'blaiseplays12@gmail.com';
+export const SECONDARY_RECIPIENT_EMAIL = 'jacobg.webdev@gmail.com';
+export const PRIMARY_RECIPIENT_EMAILS = `${PRIMARY_RECIPIENT_EMAIL}, ${SECONDARY_RECIPIENT_EMAIL}`;
+
+/**
+ * Generates an RFC-compliant mailto URI:
+ * Single primary recipient in path (avoids crash/rejection in Apple Mail & Windows Outlook),
+ * and secondary recipient in CC parameter.
+ */
+export function getMailtoLink(
+  payload: InquiryPayload,
+  primaryTo: string = PRIMARY_RECIPIENT_EMAIL,
+  ccTo: string = SECONDARY_RECIPIENT_EMAIL
+): string {
+  const subject = `Website Maintenance Request: ${payload.planOrService} ${payload.name ? `from ${payload.name}` : ''}`;
   const body = buildInquirySummary(payload);
-  return `mailto:${toEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  const queryParts: string[] = [];
+  if (ccTo) {
+    queryParts.push(`cc=${encodeURIComponent(ccTo)}`);
+  }
+  queryParts.push(`subject=${encodeURIComponent(subject)}`);
+  queryParts.push(`body=${encodeURIComponent(body)}`);
+
+  return `mailto:${encodeURIComponent(primaryTo)}?${queryParts.join('&')}`;
 }
 
 export function getWebGmailLink(payload: InquiryPayload): string {
-  const subject = `Website Inquiry from ${payload.name || 'New Client'}: ${payload.planOrService}`;
+  const subject = `Website Maintenance Request: ${payload.planOrService} ${payload.name ? `from ${payload.name}` : ''}`;
   const body = buildInquirySummary(payload);
-  return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(DEVELOPER_PROFILE.email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(PRIMARY_RECIPIENT_EMAIL)}&cc=${encodeURIComponent(SECONDARY_RECIPIENT_EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+export function getWebOutlookLink(payload: InquiryPayload): string {
+  const subject = `Website Maintenance Request: ${payload.planOrService} ${payload.name ? `from ${payload.name}` : ''}`;
+  const body = buildInquirySummary(payload);
+  return `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(PRIMARY_RECIPIENT_EMAIL)}&cc=${encodeURIComponent(SECONDARY_RECIPIENT_EMAIL)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 /**
- * Sends real email to Jacob George (jacobg.webdev@gmail.com) via FormSubmit AJAX service
+ * Universal mailto dispatcher that breaks out of iframe sandbox constraints
  */
-export async function sendEmailToJacob(payload: InquiryPayload): Promise<{ success: boolean; message?: string }> {
+export function dispatchMailtoUniversal(mailtoUrl: string) {
   try {
-    const summary = buildInquirySummary(payload);
-    
-    const response = await fetch(`https://formsubmit.co/ajax/${DEVELOPER_PROFILE.email}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({
-        _subject: `New Inquiry from ${payload.name}: ${payload.planOrService}`,
-        _replyto: payload.email,
-        _template: 'table',
-        _captcha: 'false',
-        'Client Name': payload.name,
-        'Client Email': payload.email,
-        'Client Phone': payload.phone || 'Not provided',
-        'Website URL': payload.websiteUrl || 'Not specified',
-        'Selected Plan / Service': payload.planOrService,
-        'Timeline': payload.timeline || 'Immediate',
-        'Estimated Updates': payload.editsEstimate || 'Standard',
-        'Message / Notes': payload.notesOrMessage || 'None provided',
-        'Full Brief Summary': summary,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Server returned ${response.status}`);
+    const link = document.createElement('a');
+    link.href = mailtoUrl;
+    link.target = '_top';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch {
+    try {
+      window.location.href = mailtoUrl;
+    } catch {
+      // Ignored
     }
-
-    const data = await response.json();
-    return { success: true, message: data.message || 'Sent successfully' };
-  } catch (err: any) {
-    console.warn('Direct FormSubmit failed or blocked, fallback to mailto', err);
-    return { success: false, message: err?.message || 'Network error' };
   }
 }

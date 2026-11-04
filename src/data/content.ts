@@ -1,10 +1,10 @@
 import { MaintenancePlan, ProjectItem, Testimonial, FaqItem } from '../types';
-import heroImage from '../assets/images/hero_developer_workspace_1792787895618.jpg';
+import heroWorkspaceImage from '../assets/images/jacob_developer_workspace_1793393794140.jpg';
 import archStudioImage from '../assets/images/showcase_arch_studio_1792787896663.jpg';
-import artisanCoffeeImage from '../assets/images/showcase_artisan_coffee_1792787897466.jpg';
-import saasPlatformImage from '../assets/images/showcase_saas_platform_1792787897450.jpg';
+import coffeeImage from '../assets/images/showcase_artisan_coffee_1792787897466.jpg';
+import saasImage from '../assets/images/showcase_saas_platform_1792787897450.jpg';
 
-export const HERO_IMAGE = heroImage;
+export const HERO_IMAGE = heroWorkspaceImage;
 
 export const PLANS: MaintenancePlan[] = [
   {
@@ -83,7 +83,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Terra & Grain Specialty Coffee',
     client: 'Terra & Grain Roasters',
     category: 'E-Commerce Storefront',
-    image: artisanCoffeeImage,
+    image: coffeeImage,
     summary: 'High-conversion artisanal storefront featuring weekly single-origin drops, roast profile cards, and customer subscriptions.',
     metrics: [
       { label: 'Checkout Conversion', value: '+28%' },
@@ -98,7 +98,7 @@ export const PROJECTS: ProjectItem[] = [
     title: 'Nexus Analytics Dashboard Web App',
     client: 'Nexus Cloud Technologies',
     category: 'SaaS & Web Application',
-    image: saasPlatformImage,
+    image: saasImage,
     summary: 'Responsive marketing platform and client portal interface designed for high reliability, live chart widgets, and zero downtime.',
     metrics: [
       { label: 'Bounce Rate', value: '-35%' },
@@ -205,8 +205,10 @@ export const FAQS: FaqItem[] = [
 export const DEVELOPER_PROFILE = {
   name: 'Jacob George',
   role: 'Website Developer',
-  email: 'jacobg.webdev@gmail.com',
+  email: 'blaiseplays12@gmail.com',
+  secondaryEmail: 'jacobg.webdev@gmail.com',
   alternateEmail: 'jacobg.websitedev@outlook.com',
+  allEmails: 'blaiseplays12@gmail.com,jacobg.webdev@gmail.com',
   phone: '940-204-0978',
   phoneFormatted: '(940) 204-0978',
   location: 'Remote · Serving Clients Worldwide',

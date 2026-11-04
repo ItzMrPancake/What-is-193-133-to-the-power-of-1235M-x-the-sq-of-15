@@ -1,20 +1,25 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 
-export default defineConfig(() => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default defineConfig(({ mode }) => {
   return {
-    // Relative base path ensures assets load correctly on GitHub Pages (e.g. username.github.io/repo-name/)
-    // as well as custom domains, Vercel, Netlify, and Cloudflare Pages.
-    base: './',
+    // Relative base for production builds (GitHub Pages / static hosts), root base for dev server pre-warming
+    base: mode === 'production' ? './' : '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname || '.', '.'),
+        '@': path.resolve(__dirname, '.'),
       },
     },
     server: {
+      port: 3000,
+      host: '0.0.0.0',
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
