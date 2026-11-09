@@ -24,23 +24,26 @@ export function Hero({ onOpenIntake }: HeroProps) {
             </h1>
 
             <p className="mt-5 text-base sm:text-lg text-neutral-400 leading-relaxed max-w-2xl">
-              I’m <span className="text-white font-medium">Jacob George</span>. I build custom, responsive websites and provide dedicated monthly maintenance—handling security, web hosting, routine updates, and layout edits so your site stays fast, secure, and always up to date.
+              I’m <span className="text-white font-medium">Jacob George</span>. I build custom, responsive websites and provide dedicated monthly maintenance, handling security, web hosting, routine updates, and layout edits so your site stays fast, secure, and always up to date.
             </p>
 
             {/* Quick pricing callout */}
             <div className="mt-6 p-4 rounded-xl border border-neutral-800 bg-neutral-900/60 max-w-xl">
-              <div className="text-xs text-neutral-400 mb-2">Monthly Maintenance Plans:</div>
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-white">Basic Plan</span>
+              <div className="text-xs text-neutral-400 mb-2">Transparent Pricing:</div>
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-semibold text-white">Basic:</span>
                   <span className="font-mono text-amber-400 font-semibold tabular-nums">$20/mo</span>
-                  <span className="text-neutral-500 text-xs">· 3 updates included</span>
                 </div>
-                <div className="h-4 w-px bg-neutral-800 hidden sm:block"></div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-white">Plus Plan</span>
+                <div className="h-3.5 w-px bg-neutral-800 hidden sm:block"></div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-semibold text-white">Plus:</span>
                   <span className="font-mono text-amber-400 font-semibold tabular-nums">$40/mo</span>
-                  <span className="text-neutral-500 text-xs">· 10 small + 1 big edit</span>
+                </div>
+                <div className="h-3.5 w-px bg-neutral-800 hidden sm:block"></div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-semibold text-white">Custom Build:</span>
+                  <span className="font-mono text-amber-400 font-bold tabular-nums">$1,000 even</span>
                 </div>
               </div>
             </div>

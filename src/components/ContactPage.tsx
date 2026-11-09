@@ -61,7 +61,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
       case 'plus':
         return 'Plus Maintenance Plan ($40/month · Extras: $3 small / $5 big)';
       case 'custom':
-        return 'Custom Website Development / Redesign';
+        return 'Custom Website Development / Redesign ($1,000 even)';
       case 'speed':
         return 'Website Speed & Performance Optimization';
       default:
@@ -116,7 +116,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
             Let&apos;s talk about your website.
           </h1>
           <p className="mt-4 text-base sm:text-lg text-neutral-400 leading-relaxed">
-            Whether you need the <span className="text-white font-medium">Basic Plan ($20/mo)</span>, <span className="text-white font-medium">Plus Plan ($40/mo)</span>, or a brand-new high-performance custom build, send me a message directly. I personally review every inquiry and reply within 24 hours.
+            Whether you need the <span className="text-white font-medium">Basic Plan ($20/mo)</span>, <span className="text-white font-medium">Plus Plan ($40/mo)</span>, or a brand-new high-performance custom build (<span className="text-amber-400 font-semibold">$1,000 even</span>), send me a message directly. I personally review every inquiry and reply within 24 hours.
           </p>
         </div>
 
@@ -349,8 +349,13 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                           : 'border-neutral-800 bg-neutral-900/40 text-neutral-400 hover:border-neutral-700'
                       }`}
                     >
-                      <div className="text-xs font-bold text-white">Custom Web Development</div>
-                      <div className="text-neutral-400 text-[11px]">Bespoke React / Next.js</div>
+                      <div className="text-xs font-bold text-white flex items-center justify-between">
+                        <span>Custom Web Development</span>
+                        <span className="text-amber-400 font-mono text-[11px] font-bold tabular-nums">
+                          $1,000 even
+                        </span>
+                      </div>
+                      <div className="text-neutral-400 text-[11px]">Bespoke React / Next.js New Build or Redesign</div>
                     </button>
 
                     <button
@@ -624,6 +629,16 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                   </div>
                   <div className="text-neutral-400 text-[11px] mt-1">
                     Hosting + Priority + 10 small + 1 big edit/mo (Extras: $3 small / $5 big)
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-neutral-950 border border-neutral-800">
+                  <div className="flex justify-between font-semibold text-white">
+                    <span>Custom Website Build</span>
+                    <span className="text-amber-400 font-mono tabular-nums font-bold">$1,000 even</span>
+                  </div>
+                  <div className="text-neutral-400 text-[11px] mt-1">
+                    Brand-new custom responsive build or full redesign
                   </div>
                 </div>
               </div>

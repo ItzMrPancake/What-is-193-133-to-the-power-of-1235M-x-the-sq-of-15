@@ -49,14 +49,20 @@ export function IntakeModal({
 
   if (!isOpen) return null;
 
-  const currentPlan = PLANS.find((p) => p.id === selectedPlanId) || PLANS[1];
+  const currentPlan = PLANS.find((p) => p.id === selectedPlanId);
+  const planLabel =
+    selectedPlanId === 'custom'
+      ? 'Custom Website Build ($1,000 even)'
+      : currentPlan
+        ? `${currentPlan.name} ($${currentPlan.price}/month)`
+        : 'Plus Plan ($40/month)';
 
   const payload = {
     name,
     email,
     phone,
     websiteUrl,
-    planOrService: `${currentPlan.name} ($${currentPlan.price}/month)`,
+    planOrService: planLabel,
     notesOrMessage: notes,
     editsEstimate,
   };
@@ -97,21 +103,21 @@ export function IntakeModal({
         {/* Modal Header */}
         <div className="text-xs font-semibold tracking-wider uppercase text-amber-400 mb-1 flex items-center gap-1.5">
           <Sparkles className="h-3.5 w-3.5" />
-          Direct Email Dispatch · No Middlemen
+          Direct Email Dispatch · Direct to Jacob George
         </div>
         <h3 className="text-2xl font-bold text-white">
-          Start Your Website Maintenance Plan
+          Start Your Website Plan or Project
         </h3>
         <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-          Select your plan and details below. When you&apos;re ready, choose either <strong>Gmail</strong> or your <strong>Device Mail App</strong> to send your request directly to Jacob George.
+          Select your plan or custom project below. When ready, click either <strong>Gmail</strong> or your <strong>Device Mail App</strong> to dispatch your request directly to Jacob George.
         </p>
 
-        {/* Plan Selector Buttons */}
+        {/* Plan / Project Selector Buttons */}
         <div className="mt-5">
           <label className="block text-xs font-semibold text-neutral-300 mb-2">
-            Selected Plan
+            Selected Service / Plan
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             {PLANS.map((plan) => {
               const isSelected = selectedPlanId === plan.id;
               return (
@@ -129,18 +135,41 @@ export function IntakeModal({
                     <span className="text-xs font-bold text-white">
                       {plan.name}
                     </span>
-                    <span className="font-mono text-xs font-bold text-amber-400 tabular-nums">
-                      ${plan.price}/mo
-                    </span>
+                  </div>
+                  <div className="font-mono text-xs font-bold text-amber-400 tabular-nums mt-0.5">
+                    ${plan.price}/mo
                   </div>
                   <div className="text-[11px] text-neutral-400 mt-1 line-clamp-1">
                     {plan.id === 'plus'
-                      ? '10 updates + 1 big edit · Extras $3/$5'
-                      : '3 updates included · Extras $5'}
+                      ? '10 updates + 1 big'
+                      : '3 updates included'}
                   </div>
                 </button>
               );
             })}
+
+            {/* Custom Website Build ($1,000 even) */}
+            <button
+              type="button"
+              onClick={() => setSelectedPlanId('custom')}
+              className={`cursor-pointer p-3 rounded-xl border text-left transition-all ${
+                selectedPlanId === 'custom'
+                  ? 'border-amber-400 bg-neutral-900 ring-1 ring-amber-400/40'
+                  : 'border-neutral-800 bg-neutral-900/40 hover:border-neutral-700'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-white">
+                  Custom Website
+                </span>
+              </div>
+              <div className="font-mono text-xs font-bold text-amber-400 tabular-nums mt-0.5">
+                $1,000 even
+              </div>
+              <div className="text-[11px] text-neutral-400 mt-1 line-clamp-1">
+                New Build / Redesign
+              </div>
+            </button>
           </div>
         </div>
 
@@ -185,21 +214,10 @@ export function IntakeModal({
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Need menu prices updated and monthly hosting"
+              placeholder="e.g. Need monthly updates or a $1,000 custom website redesign"
               className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
             />
           </div>
-        </div>
-
-        {/* Live Email Draft Preview */}
-        <div className="mt-4 rounded-xl border border-neutral-800 bg-neutral-950 p-3">
-          <div className="flex items-center justify-between text-[11px] text-neutral-400 mb-1.5">
-            <span className="font-semibold text-neutral-300">Email Draft Ready to Send:</span>
-            <span className="font-mono text-amber-400 text-[10px]">To: {PRIMARY_RECIPIENT_EMAILS}</span>
-          </div>
-          <pre className="text-[11px] text-neutral-300 font-mono whitespace-pre-wrap leading-relaxed max-h-24 overflow-y-auto bg-neutral-900/60 p-2.5 rounded border border-neutral-800/80">
-            {messagePreview}
-          </pre>
         </div>
 
         {/* THE ONLY TWO SEND OPTIONS */}

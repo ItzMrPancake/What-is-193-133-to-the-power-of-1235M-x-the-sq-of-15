@@ -171,6 +171,35 @@ export function MaintenancePlans({ onOpenIntake, onOpenScopeGuide }: Maintenance
           })}
         </div>
 
+        {/* Custom Website Build Card ($1,000 even) */}
+        <div className="mt-8 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 uppercase tracking-wider">
+              <Sparkles className="h-3.5 w-3.5" />
+              Need a brand-new website or complete redesign?
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-white">
+              Custom Website Development &middot; <span className="text-amber-400 font-mono tabular-nums">$1,000 even</span>
+            </h3>
+            <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
+              Full-stack, bespoke design tailored to your brand. Built with React, Next.js, and modern Tailwind styling. Includes sub-second load speeds, mobile responsiveness, SEO optimization, and painless deployment—with seamless transition into our $20/mo or $40/mo maintenance plans after launch.
+            </p>
+          </div>
+
+          <div className="shrink-0 flex flex-col sm:flex-row md:flex-col gap-2 w-full md:w-auto">
+            <button
+              type="button"
+              onClick={() => onOpenIntake('custom')}
+              className="cursor-pointer rounded-xl bg-amber-400 px-5 py-3 text-center text-xs font-bold text-neutral-950 hover:bg-amber-300 transition-colors whitespace-nowrap shadow-md"
+            >
+              Start $1,000 Custom Build &rarr;
+            </button>
+            <span className="text-[11px] text-neutral-500 text-center">
+              Flat rate · No hourly billing surprises
+            </span>
+          </div>
+        </div>
+
         {/* Scope clarification helper banner */}
         <div className="mt-10 rounded-xl border border-neutral-800 bg-neutral-900/30 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3">

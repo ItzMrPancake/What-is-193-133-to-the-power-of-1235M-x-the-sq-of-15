@@ -196,6 +196,11 @@ export const FAQS: FaqItem[] = [
     category: 'plans',
   },
   {
+    question: 'How much does a brand-new custom website build or redesign cost?',
+    answer: 'Custom website development and full redesigns are flat $1,000 even. This includes a custom responsive build (React / Next.js / Tailwind), modern aesthetics, sub-second load times, SEO structure, mobile optimization, and full deployment. After launch, you can easily keep it updated with our $20/mo Basic or $40/mo Plus plan.',
+    category: 'plans',
+  },
+  {
     question: 'What web hosting maintenance is included?',
     answer: 'I monitor server performance, uptime, SSL security certificates, database connections, and ensure your domain records and backups are healthy. If your site ever experiences unexpected downtime, I address and resolve it immediately.',
     category: 'technical',
@@ -215,4 +220,6 @@ export const DEVELOPER_PROFILE = {
   experience: '6+ Years Experience',
   turnaroundTime: '24–48 Hours',
   guarantee: 'Zero lock-in contracts · Direct developer access',
+  customBuildPrice: '$1,000 even',
+  customBuildPriceNumber: 1000,
 };

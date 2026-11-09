@@ -33,7 +33,7 @@ export function ContactSection({ onOpenFullContactPage }: ContactSectionProps) {
     email,
     phone,
     websiteUrl: siteUrl,
-    planOrService: selectedPlan === 'custom' ? 'Custom Website Build / Redesign' : `${currentPlan.name} ($${currentPlan.price}/month)`,
+    planOrService: selectedPlan === 'custom' ? 'Custom Website Build / Redesign ($1,000 even)' : `${currentPlan.name} ($${currentPlan.price}/month)`,
     notesOrMessage: message,
   };
 
@@ -214,7 +214,9 @@ export function ContactSection({ onOpenFullContactPage }: ContactSectionProps) {
                   }`}
                 >
                   <div>Custom Website</div>
-                  <div className="text-neutral-400 text-[11px]">New Build / Redesign</div>
+                  <div className="text-amber-400 font-mono text-[11px] font-bold tabular-nums">
+                    $1,000 even
+                  </div>
                 </button>
               </div>
             </div>
@@ -262,17 +264,6 @@ export function ContactSection({ onOpenFullContactPage }: ContactSectionProps) {
                   placeholder="Tell Jacob what you need—routine updates, faster site speeds, or peace-of-mind hosting..."
                   className="w-full rounded-lg border border-neutral-800 bg-neutral-950 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none resize-none"
                 />
-              </div>
-
-              {/* Ready-to-Send Email Preview */}
-              <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-3 text-xs">
-                <div className="flex items-center justify-between text-[11px] text-neutral-400 mb-1.5">
-                  <span className="font-semibold text-neutral-300">Live Email Draft:</span>
-                  <span className="font-mono text-amber-400">To: {PRIMARY_RECIPIENT_EMAILS}</span>
-                </div>
-                <pre className="text-[11px] text-neutral-300 font-mono whitespace-pre-wrap leading-relaxed max-h-24 overflow-y-auto bg-neutral-900/60 p-2 rounded border border-neutral-800/80">
-                  {messagePreview}
-                </pre>
               </div>
 
               {/* THE ONLY TWO SEND OPTIONS */}
