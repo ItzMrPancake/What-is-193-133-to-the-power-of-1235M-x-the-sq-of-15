@@ -1,112 +1,63 @@
-import { MaintenancePlan, ProjectItem, Testimonial, FaqItem } from '../types';
+import { MaintenancePlan, Testimonial, FaqItem } from '../types';
 import heroWorkspaceImage from '../assets/images/jacob_developer_workspace_1793393794140.jpg';
-import archStudioImage from '../assets/images/showcase_arch_studio_1792787896663.jpg';
-import coffeeImage from '../assets/images/showcase_artisan_coffee_1792787897466.jpg';
-import saasImage from '../assets/images/showcase_saas_platform_1792787897450.jpg';
 
 export const HERO_IMAGE = heroWorkspaceImage;
 
 export const PLANS: MaintenancePlan[] = [
   {
     id: 'basic',
-    name: 'Basic Plan',
-    price: 20,
+    name: 'Standard Care',
+    price: 100,
     period: '/ month',
-    tagline: 'Essential upkeep and steady edits for small business websites.',
+    tagline: 'Full-stack website build upfront ($1,000) + essential monthly upkeep, hosting maintenance, and steady edits.',
     features: [
-      'Web hosting maintenance',
-      'Security updates & patch monitoring',
-      'Up to 3 small text/photo updates per month',
-      'Routine uptime & health checks',
-      'Direct developer support via email',
+      '$1,000 upfront custom website build & deployment',
+      'High-performance web hosting & SSL maintenance',
+      'Proactive security monitoring & daily cloud backups',
+      'Up to 3 content / text / photo updates per month included',
+      '24/7 uptime health monitoring (99.9% guarantee)',
+      'Direct developer support via email & phone',
     ],
     smallUpdatesLimit: 3,
     layoutEditsLimit: 0,
     extraSmallEditCost: 5,
     extraBigEditCost: 15,
-    extraEditCostNote: 'Extra small edits: $5 · Major layout edits: only +$15 each',
-    idealFor: 'Landing pages, local service websites, and portfolios that need steady monthly upkeep.',
+    extraEditCostNote: 'Requires $1,000 upfront build. Extra updates: only $5 · Major layout edits: +$15',
+    idealFor: 'Businesses needing a high-performance custom website ($1,000 upfront) plus reliable monthly maintenance.',
     highlights: [
-      '3 small text/photo updates included',
-      'Hosting & security covered',
-      'Extra small edits: $5 · Major layout edits: +$15',
+      '$1,000 upfront build + $100/mo',
+      '3 updates / month included',
+      'Super affordable extras: only $5 small / +$15 big',
     ],
   },
   {
     id: 'plus',
-    name: 'Plus Plan',
-    price: 40,
+    name: 'Growth Care',
+    price: 125,
     period: '/ month',
     badge: 'Most Popular',
-    tagline: 'Comprehensive maintenance, layout evolutions, and discounted extra edit rates.',
+    tagline: 'Full-stack website build upfront ($1,000) + active monthly evolutions, 10 updates, 1 big layout edit, and priority queue.',
     features: [
-      'Web hosting maintenance included',
-      'Priority support with faster turnaround queue',
-      'Comprehensive security updates & daily backups',
+      '$1,000 upfront custom website build & deployment',
+      'High-performance web hosting & priority infrastructure',
+      'Expedited support queue with faster turnaround',
+      'Comprehensive security updates & daily off-site backups',
       'Up to 10 small updates per month included',
-      '1 major layout edit per month included',
-      'Discounted extra edits: only $3/small and +$10/big',
-      'Monthly performance & health report',
+      '1 major layout edit per month included ($150 value)',
+      'Lowest extra edits: only $3/small and +$10/big',
+      'Monthly speed, SEO, and uptime health reports',
     ],
     smallUpdatesLimit: 10,
     layoutEditsLimit: 1,
     extraSmallEditCost: 3,
     extraBigEditCost: 10,
-    extraEditCostNote: '1 major layout edit included every month. Extra edits: only $3/small and +$10/big',
-    idealFor: 'Growing businesses, active storefronts, and brands that regularly refresh content and layouts.',
+    extraEditCostNote: 'Requires $1,000 upfront build. 1 major layout edit included every month. Extra edits: only $3/small and +$10/big',
+    idealFor: 'Growing businesses, active storefronts, and brands that regularly refresh content, campaigns, and layouts.',
     highlights: [
-      '10 small updates + 1 major layout edit included',
-      'Extra edits: only $3 small / +$10 big',
-      'Priority turnaround queue',
+      '$1,000 upfront build + $125/mo',
+      '10 updates + 1 major layout edit included',
+      'Lowest extra edits: only $3 small / +$10 big',
     ],
-  },
-];
-
-export const PROJECTS: ProjectItem[] = [
-  {
-    id: 'archetype',
-    title: 'Archetype Architectural Studio',
-    client: 'Archetype Studio AG',
-    category: 'Architecture & Design',
-    image: archStudioImage,
-    summary: 'A minimalist digital showcase with bespoke project grid, dark-mode styling, and sub-second page transitions.',
-    metrics: [
-      { label: 'Page Speed', value: '99/100' },
-      { label: 'Monthly Inquiries', value: '+44%' },
-      { label: 'Load Time', value: '0.42s' },
-    ],
-    techStack: ['React', 'Next.js', 'Tailwind CSS', 'Vercel Edge'],
-    maintenancePlanUsed: 'Plus Plan ($40/mo) for bi-weekly project photography updates ($3 extra/small) and landing section refinements.',
-  },
-  {
-    id: 'terra-grain',
-    title: 'Terra & Grain Specialty Coffee',
-    client: 'Terra & Grain Roasters',
-    category: 'E-Commerce Storefront',
-    image: coffeeImage,
-    summary: 'High-conversion artisanal storefront featuring weekly single-origin drops, roast profile cards, and customer subscriptions.',
-    metrics: [
-      { label: 'Checkout Conversion', value: '+28%' },
-      { label: 'Monthly Uptime', value: '100%' },
-      { label: 'Mobile Score', value: '98/100' },
-    ],
-    techStack: ['Shopify Headless', 'TypeScript', 'Tailwind', 'Stripe'],
-    maintenancePlanUsed: 'Plus Plan ($40/mo) with seasonal menu updates, banner swaps, and promotional landing blocks.',
-  },
-  {
-    id: 'nexus-analytics',
-    title: 'Nexus Analytics Dashboard Web App',
-    client: 'Nexus Cloud Technologies',
-    category: 'SaaS & Web Application',
-    image: saasImage,
-    summary: 'Responsive marketing platform and client portal interface designed for high reliability, live chart widgets, and zero downtime.',
-    metrics: [
-      { label: 'Bounce Rate', value: '-35%' },
-      { label: 'SEO Visibility', value: '+62%' },
-      { label: 'Uptime Monitored', value: '99.98%' },
-    ],
-    techStack: ['React', 'TypeScript', 'Node.js', 'Tailwind CSS'],
-    maintenancePlanUsed: 'Basic Plan ($20/mo) covering continuous SSL certificates, node dependencies, and monthly security patches.',
   },
 ];
 
@@ -140,34 +91,39 @@ export const SCOPE_ITEMS = {
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: '1',
-    quote: 'Jacob took over our website hosting and maintenance eight months ago. Every time we need price updates or new case studies uploaded, it gets done in hours. The peace of mind is easily worth 10x what he charges.',
-    author: 'Elena Rostova',
-    role: 'Principal Architect',
-    company: 'Archetype Studio',
+    quote: 'Jacob took over our website hosting and monthly updates. Every time we need price updates or new photos uploaded, it gets done in hours. The peace of mind is easily worth 10x what he charges.',
+    author: 'Elena R.',
+    role: 'Studio Director',
+    company: 'Design & Architecture',
     metric: 'Zero downtime in 8 months',
   },
   {
     id: '2',
-    quote: 'Before Jacob, our coffee site broke twice during holiday sales. Switching to his Plus Plan fixed our speed, kept our security tight, and made monthly promo updates completely painless—plus extra small edits are only $3!',
-    author: 'Marcus Chen',
-    role: 'Founder & Head Roaster',
-    company: 'Terra & Grain Co.',
+    quote: 'Before Jacob, our storefront site broke during peak sales. His $1,000 custom build and monthly care fixed our speed, kept security rock-solid, and made monthly promo updates completely seamless.',
+    author: 'Marcus C.',
+    role: 'Founder & Retail Owner',
+    company: 'Specialty Retail Co.',
     metric: '48hr turnaround on all edits',
   },
   {
     id: '3',
     quote: 'Having a real developer handle both our monthly maintenance and occasional layout updates has saved our marketing team countless hours. Responsive, reliable, and razor-sharp attention to detail.',
-    author: 'Sarah Lindqvist',
+    author: 'Sarah L.',
     role: 'Operations Lead',
-    company: 'NorthPath Logistics',
+    company: 'Logistics & Services',
     metric: '+28% site speed improvement',
   },
 ];
 
 export const FAQS: FaqItem[] = [
   {
-    question: 'How do extra edits work on the Basic Plan vs. Plus Plan?',
-    answer: 'On the Basic Plan ($20/mo), you get up to 3 small updates included; extra small edits are $5 each, and major layout edits are only +$15 each. On the Plus Plan ($40/mo), you get 10 small updates and 1 major layout edit already included; extra small updates are discounted to only $3 each, and extra big layout edits are only +$10 each.',
+    question: 'How does the pricing work? Is there an upfront fee?',
+    answer: 'Yes. Every project begins with a $1,000 upfront custom website build fee, which covers full bespoke design, coding (React / Next.js / Tailwind), SEO architecture, mobile responsiveness, and deployment. Then, ongoing maintenance and hosting is paired with either our Standard Care ($100/month) or Growth Care ($125/month) plan.',
+    category: 'plans',
+  },
+  {
+    question: 'How do extra edits work on Standard Care ($100/mo) vs. Growth Care ($125/mo)?',
+    answer: 'Extra edits are kept extremely affordable so you never feel nickel-and-dimed. On Standard Care ($100/mo), you get 3 updates included each month; extra small edits are just $5 each, and major layout edits are +$15 each. On Growth Care ($125/mo), you get 10 small updates and 1 major layout edit already included every month; extra small updates are discounted to only $3 each, and extra big layout edits are only +$10 each.',
     category: 'plans',
   },
   {
@@ -177,12 +133,12 @@ export const FAQS: FaqItem[] = [
   },
   {
     question: 'What is a "major layout edit" / "big edit"?',
-    answer: 'A major (big) layout edit involves restructuring an existing section, adding a brand-new interactive block (such as an accordion FAQ, a new lead capture form, or a comparison table), or revamping a header/footer layout. In the Plus Plan, you get 1 major layout edit included every month (extra big edits are +$10 each). On the Basic Plan, you can add a major layout edit for just +$15 each.',
+    answer: 'A major (big) layout edit involves restructuring an existing section, adding a brand-new interactive block (such as an accordion FAQ, a new lead capture form, or a comparison table), or revamping a header/footer layout. In Growth Care ($125/mo), you get 1 major layout edit included every month (extra big edits are only +$10 each). On Standard Care ($100/mo), you can add a major layout edit for just +$15 each.',
     category: 'plans',
   },
   {
     question: 'Can you maintain a website that someone else built?',
-    answer: 'Yes! Whether your website is built on WordPress, React/Next.js, Webflow, Shopify, or plain HTML/CSS, I perform an initial technical audit to check code health, hosting credentials, and plugins, and then smoothly transition it onto the maintenance plan.',
+    answer: 'Yes! If you already have an existing website and need monthly care ($100/mo or $125/mo), I perform an onboarding technical audit to inspect code health, hosting credentials, and plugins, and then transition your site onto ongoing maintenance.',
     category: 'technical',
   },
   {
@@ -192,17 +148,12 @@ export const FAQS: FaqItem[] = [
   },
   {
     question: 'Are there any contracts or lock-in periods?',
-    answer: 'None at all. All maintenance plans are strictly month-to-month. You can upgrade, downgrade, or cancel whenever you wish with zero penalty or cancellation fees.',
+    answer: 'None at all. The monthly maintenance plans are strictly month-to-month after your $1,000 upfront build is launched. You can upgrade, downgrade, or cancel whenever you wish with zero penalty or cancellation fees.',
     category: 'plans',
   },
   {
-    question: 'How much does a brand-new custom website build or redesign cost?',
-    answer: 'Custom website development and full redesigns are flat $1,000 even. This includes a custom responsive build (React / Next.js / Tailwind), modern aesthetics, sub-second load times, SEO structure, mobile optimization, and full deployment. After launch, you can easily keep it updated with our $20/mo Basic or $40/mo Plus plan.',
-    category: 'plans',
-  },
-  {
-    question: 'What web hosting maintenance is included?',
-    answer: 'I monitor server performance, uptime, SSL security certificates, database connections, and ensure your domain records and backups are healthy. If your site ever experiences unexpected downtime, I address and resolve it immediately.',
+    question: 'What web hosting maintenance is included in the monthly fee?',
+    answer: 'I monitor server performance, uptime, SSL security certificates, database connections, and ensure your domain records and daily cloud backups are healthy. If your site ever experiences unexpected downtime, I address and resolve it immediately.',
     category: 'technical',
   },
 ];
@@ -220,6 +171,7 @@ export const DEVELOPER_PROFILE = {
   experience: '6+ Years Experience',
   turnaroundTime: '24–48 Hours',
   guarantee: 'Zero lock-in contracts · Direct developer access',
-  customBuildPrice: '$1,000 even',
-  customBuildPriceNumber: 1000,
+  upfrontPrice: '$1,000 upfront',
+  upfrontPriceNumber: 1000,
+  monthlyTiers: '$100/mo or $125/mo',
 };

@@ -17,10 +17,10 @@ export function MaintenancePlans({ onOpenIntake, onOpenScopeGuide }: Maintenance
             Clear, Predictable Pricing
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white [text-wrap:balance]">
-            Website Maintenance Plans
+            Website Build &amp; Ongoing Care
           </h2>
           <p className="mt-4 text-base text-neutral-400 leading-relaxed">
-            Stop worrying about plugin crashes, hosting outages, or outdated photos. Choose the monthly plan that fits your pace, with no contracts and ultra-low extra edit rates.
+            Every website begins with a <span className="text-white font-semibold">$1,000 upfront build</span> for full-stack custom design &amp; development, paired with ongoing monthly developer maintenance and hosting care starting at <span className="text-amber-400 font-semibold">$100/mo</span>.
           </p>
         </div>
 
@@ -38,17 +38,24 @@ export function MaintenancePlans({ onOpenIntake, onOpenScopeGuide }: Maintenance
                     : 'border border-neutral-800 bg-neutral-900/40 hover:border-neutral-700'
                 }`}
               >
-                {/* Plus Plan Featured Label */}
+                {/* Growth Care Featured Label */}
                 {isPlus && (
                   <div className="absolute -top-3.5 right-8">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400 px-3.5 py-1 text-xs font-bold text-neutral-950 shadow">
                       <Sparkles className="h-3.5 w-3.5" />
-                      Recommended · Best Value
+                      Recommended · Growth Care
                     </span>
                   </div>
                 )}
 
                 <div>
+                  {/* Upfront Build Badge */}
+                  <div className="mb-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-md border border-amber-400/20">
+                    <span>$1,000 Upfront Build</span>
+                    <span className="text-neutral-500">+</span>
+                    <span>{plan.name}</span>
+                  </div>
+
                   {/* Plan Name & Tagline */}
                   <div className="flex items-center justify-between">
                     <h3 className="text-2xl font-bold text-white font-display">
@@ -68,6 +75,9 @@ export function MaintenancePlans({ onOpenIntake, onOpenScopeGuide }: Maintenance
                     <span className="text-sm font-medium text-neutral-400">
                       {plan.period}
                     </span>
+                  </div>
+                  <div className="text-[11px] text-neutral-400 mt-1 font-mono">
+                    Includes full $1,000 upfront custom build &amp; ongoing monthly care
                   </div>
 
                   {/* Additional Changes Note */}
@@ -90,12 +100,12 @@ export function MaintenancePlans({ onOpenIntake, onOpenScopeGuide }: Maintenance
                         </div>
                         <div className="flex items-center justify-between text-neutral-300">
                           <span>Extra big edits (major layouts):</span>
-                          <span className="font-mono font-bold text-amber-400 tabular-nums">$5 / each</span>
+                          <span className="font-mono font-bold text-amber-400 tabular-nums">$10 / each</span>
                         </div>
                       </div>
                     ) : (
                       <div className="text-neutral-400">
-                        $5 / small change or additional edit after 3 monthly updates.
+                        Only $5 / small update or +$15 / major layout edit after 3 monthly updates.
                       </div>
                     )}
                   </div>
@@ -138,19 +148,19 @@ export function MaintenancePlans({ onOpenIntake, onOpenScopeGuide }: Maintenance
                         : 'bg-neutral-800 text-white hover:bg-neutral-700 active:scale-[0.99]'
                     }`}
                   >
-                    Select {plan.name} (${plan.price}/mo)
+                    Select $1,000 Build + {plan.name} (${plan.price}/mo)
                     <ArrowRight className="h-4 w-4" />
                   </button>
 
                   <div className="mt-3 text-center text-[11px] text-neutral-500">
                     {isPlus
-                      ? 'Includes 10 small + 1 big edit · Extras only $3 small / $5 big'
-                      : 'Includes 3 small updates · Extras $5/edit'}
+                      ? '$1,000 upfront + 10 updates & 1 big layout edit monthly'
+                      : '$1,000 upfront + 3 updates monthly · Hosting & security covered'}
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-neutral-800/60 flex items-center justify-center gap-3 text-[11px] text-neutral-400">
                     <a
-                      href={`mailto:${DEVELOPER_PROFILE.email}?subject=Direct%20Signup:%20${encodeURIComponent(plan.name)}`}
+                      href={`mailto:${DEVELOPER_PROFILE.email}?subject=Direct%20Signup:%20$1000%20Build%20Plus%20${encodeURIComponent(plan.name)}`}
                       className="hover:text-amber-400 transition-colors flex items-center gap-1"
                     >
                       <Mail className="h-3 w-3 text-amber-400" />
@@ -171,35 +181,6 @@ export function MaintenancePlans({ onOpenIntake, onOpenScopeGuide }: Maintenance
           })}
         </div>
 
-        {/* Custom Website Build Card ($1,000 even) */}
-        <div className="mt-8 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 uppercase tracking-wider">
-              <Sparkles className="h-3.5 w-3.5" />
-              Need a brand-new website or complete redesign?
-            </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-white">
-              Custom Website Development &middot; <span className="text-amber-400 font-mono tabular-nums">$1,000 even</span>
-            </h3>
-            <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-              Full-stack, bespoke design tailored to your brand. Built with React, Next.js, and modern Tailwind styling. Includes sub-second load speeds, mobile responsiveness, SEO optimization, and painless deployment—with seamless transition into our $20/mo or $40/mo maintenance plans after launch.
-            </p>
-          </div>
-
-          <div className="shrink-0 flex flex-col sm:flex-row md:flex-col gap-2 w-full md:w-auto">
-            <button
-              type="button"
-              onClick={() => onOpenIntake('custom')}
-              className="cursor-pointer rounded-xl bg-amber-400 px-5 py-3 text-center text-xs font-bold text-neutral-950 hover:bg-amber-300 transition-colors whitespace-nowrap shadow-md"
-            >
-              Start $1,000 Custom Build &rarr;
-            </button>
-            <span className="text-[11px] text-neutral-500 text-center">
-              Flat rate · No hourly billing surprises
-            </span>
-          </div>
-        </div>
-
         {/* Scope clarification helper banner */}
         <div className="mt-10 rounded-xl border border-neutral-800 bg-neutral-900/30 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
@@ -208,10 +189,10 @@ export function MaintenancePlans({ onOpenIntake, onOpenScopeGuide }: Maintenance
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white">
-                Not sure what counts as a small update vs. big layout edit?
+                How does the $1,000 upfront build work with the monthly care?
               </h4>
               <p className="text-xs text-neutral-400 mt-0.5">
-                On the Plus Plan, extra small updates are only $3 each and extra big layout edits are just $5 each. We clearly document every edit type.
+                You pay $1,000 upfront to design, code, and deploy your custom website. Once live, your chosen monthly care ($100/mo or $125/mo) keeps your hosting fast, security locked down, and updates handled.
               </p>
             </div>
           </div>

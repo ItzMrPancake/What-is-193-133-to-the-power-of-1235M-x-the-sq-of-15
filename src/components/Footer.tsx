@@ -45,13 +45,6 @@ export function Footer({ onNavigate }: FooterProps) {
             </button>
             <button
               type="button"
-              onClick={() => handleNav('home', 'projects')}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              Projects
-            </button>
-            <button
-              type="button"
               onClick={() => handleNav('contact')}
               className="hover:text-white text-amber-400 transition-colors cursor-pointer font-medium"
             >
@@ -77,10 +70,10 @@ export function Footer({ onNavigate }: FooterProps) {
           <div>
             &copy; {new Date().getFullYear()} Jacob George. All rights reserved.
           </div>
-          <div className="flex items-center gap-3">
-            <span>Basic: $20/mo (Extras: $5 small / +$15 big)</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span>$1,000 Upfront Build + Standard Care ($100/mo)</span>
             <span>&middot;</span>
-            <span>Plus: $40/mo (Extras: $3 small / +$10 big)</span>
+            <span>$1,000 Upfront Build + Growth Care ($125/mo)</span>
           </div>
         </div>
       </div>

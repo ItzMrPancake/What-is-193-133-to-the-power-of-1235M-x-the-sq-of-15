@@ -59,14 +59,6 @@ export function Navbar({ currentPage, onNavigate, onOpenIntake }: NavbarProps) {
 
           <button
             type="button"
-            onClick={() => handleNavClick('home', 'projects')}
-            className="cursor-pointer text-neutral-400 hover:text-white transition-colors whitespace-nowrap shrink-0"
-          >
-            Projects
-          </button>
-
-          <button
-            type="button"
             onClick={() => handleNavClick('contact')}
             className={`cursor-pointer transition-colors whitespace-nowrap shrink-0 hover:text-white ${
               currentPage === 'contact' ? 'text-amber-400 font-semibold' : 'text-neutral-400'
@@ -132,13 +124,6 @@ export function Navbar({ currentPage, onNavigate, onOpenIntake }: NavbarProps) {
               className="text-left py-1 hover:text-amber-400 transition-colors whitespace-nowrap"
             >
               Scope Guide
-            </button>
-            <button
-              type="button"
-              onClick={() => handleNavClick('home', 'projects')}
-              className="text-left py-1 hover:text-amber-400 transition-colors whitespace-nowrap"
-            >
-              Projects
             </button>
             <button
               type="button"

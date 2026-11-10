@@ -37,11 +37,11 @@ export function ScopeGuide() {
               {/* Explicit Plain English Allowance */}
               <div className="mb-4 rounded-xl bg-neutral-950/80 p-3.5 border border-neutral-800 text-xs space-y-1.5">
                 <div className="flex items-center justify-between text-neutral-200">
-                  <span className="font-semibold text-white">Basic Plan ($20/mo):</span>
+                  <span className="font-semibold text-white">Standard Care ($100/mo):</span>
                   <span className="font-mono text-amber-400 font-bold">3 updates / month included</span>
                 </div>
                 <div className="flex items-center justify-between text-neutral-200">
-                  <span className="font-semibold text-white">Plus Plan ($40/mo):</span>
+                  <span className="font-semibold text-white">Growth Care ($125/mo):</span>
                   <span className="font-mono text-amber-400 font-bold">10 updates / month included</span>
                 </div>
               </div>
@@ -63,10 +63,10 @@ export function ScopeGuide() {
             <div className="mt-6 pt-4 border-t border-neutral-800 text-xs space-y-1">
               <div className="text-neutral-400 font-semibold">What if you need more than your limit?</div>
               <div className="text-neutral-300">
-                &bull; On Basic: <strong>$5</strong> per extra small edit
+                &bull; On Standard Care: Only <strong>$5</strong> per extra small edit
               </div>
               <div className="text-amber-400 font-medium">
-                &bull; On Plus: Discounted to only <strong>$3</strong> per extra small edit!
+                &bull; On Growth Care: Discounted to just <strong>$3</strong> per extra small edit!
               </div>
             </div>
           </div>
@@ -89,11 +89,11 @@ export function ScopeGuide() {
               {/* Explicit Plain English Allowance */}
               <div className="mb-4 rounded-xl bg-neutral-950/80 p-3.5 border border-neutral-800 text-xs space-y-1.5">
                 <div className="flex items-center justify-between text-neutral-200">
-                  <span className="font-semibold text-white">Basic Plan ($20/mo):</span>
+                  <span className="font-semibold text-white">Standard Care ($100/mo):</span>
                   <span className="text-neutral-400">0 included (+$15 add-on per edit)</span>
                 </div>
                 <div className="flex items-center justify-between text-neutral-200">
-                  <span className="font-semibold text-white">Plus Plan ($40/mo):</span>
+                  <span className="font-semibold text-white">Growth Care ($125/mo):</span>
                   <span className="font-mono text-amber-400 font-bold">1 major layout edit / month included</span>
                 </div>
               </div>
@@ -115,10 +115,10 @@ export function ScopeGuide() {
             <div className="mt-6 pt-4 border-t border-neutral-800 text-xs space-y-1">
               <div className="text-neutral-400 font-semibold">What if you need extra big edits in the same month?</div>
               <div className="text-neutral-300">
-                &bull; On Basic Plan: Major layout edits are only <strong>+$15</strong> each
+                &bull; On Standard Care: Major layout edits are only <strong>+$15</strong> each
               </div>
               <div className="text-amber-400 font-medium">
-                &bull; On Plus Plan: Extra big layout edits are only <strong>+$10</strong> each!
+                &bull; On Growth Care: Extra big layout edits are only <strong>+$10</strong> each!
               </div>
               <div className="text-neutral-400 text-[11px]">
                 (Normal agencies charge $150+ for custom section builds)
@@ -144,11 +144,11 @@ export function ScopeGuide() {
               {/* Explicit Plain English Allowance */}
               <div className="mb-4 rounded-xl bg-neutral-950/80 p-3.5 border border-neutral-800 text-xs space-y-1.5">
                 <div className="flex items-center justify-between text-neutral-200">
-                  <span className="font-semibold text-white">Basic Plan ($20/mo):</span>
+                  <span className="font-semibold text-white">Standard Care ($100/mo):</span>
                   <span className="font-mono text-emerald-400 font-bold">Full hosting &amp; security</span>
                 </div>
                 <div className="flex items-center justify-between text-neutral-200">
-                  <span className="font-semibold text-white">Plus Plan ($40/mo):</span>
+                  <span className="font-semibold text-white">Growth Care ($125/mo):</span>
                   <span className="font-mono text-emerald-400 font-bold">Hosting + Priority queue</span>
                 </div>
               </div>
@@ -183,7 +183,7 @@ export function ScopeGuide() {
             How your monthly invoice works in practice
           </h3>
           <p className="text-xs text-neutral-400 mt-1 mb-6">
-            There are never any surprise hourly invoices or hidden fees. Here is how simple the math is:
+            There are never any surprise hourly invoices or hidden fees. All custom builds start at $1,000 upfront, followed by simple flat monthly care:
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
@@ -191,55 +191,56 @@ export function ScopeGuide() {
             <div className="rounded-xl bg-neutral-950 p-4 border border-neutral-800">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-bold text-white text-sm">Example A: Typical Quiet Month</span>
-                <span className="font-mono text-emerald-400 font-bold">$20 total</span>
+                <span className="font-mono text-emerald-400 font-bold">$100 total</span>
               </div>
               <p className="text-neutral-300 leading-relaxed">
-                You are on the <strong>Basic Plan ($20/mo)</strong>. In June, you email Jacob to change your store hours and swap 1 photo (2 small updates used out of 3 included).
+                You are on <strong>Standard Care ($100/mo)</strong>. In June, you email Jacob to change your store hours and swap 1 photo (2 small updates used out of 3 included).
               </p>
               <div className="mt-3 pt-2 border-t border-neutral-800/80 text-neutral-400 font-mono">
-                Calculation: $20 base plan + $0 extras = <strong>$20 flat</strong>
+                Calculation: $100 base plan + $0 extras = <strong>$100 flat</strong>
               </div>
             </div>
 
             {/* Example 2 */}
+            {/* Example 2 */}
             <div className="rounded-xl bg-neutral-950 p-4 border border-neutral-800">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-white text-sm">Example B: Active Month on Basic</span>
-                <span className="font-mono text-amber-400 font-bold">$30 total</span>
+                <span className="font-bold text-white text-sm">Example B: Active Month on Standard</span>
+                <span className="font-mono text-amber-400 font-bold">$110 total</span>
               </div>
               <p className="text-neutral-300 leading-relaxed">
-                You are on the <strong>Basic Plan ($20/mo)</strong>. You have 5 text/photo updates in a month (3 are covered free in your plan, so you have 2 extra changes at $5 each).
+                You are on <strong>Standard Care ($100/mo)</strong>. You have 5 text/photo updates in a month (3 are covered free in your plan, so you have 2 extra changes at only $5 each).
               </p>
               <div className="mt-3 pt-2 border-t border-neutral-800/80 text-neutral-400 font-mono">
-                Calculation: $20 base + (2 extra &times; $5) = <strong>$30 total</strong>
+                Calculation: $100 base + (2 extra &times; $5) = <strong>$110 total</strong>
               </div>
             </div>
 
             {/* Example 3 */}
             <div className="rounded-xl bg-neutral-950 p-4 border border-amber-400/40">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-white text-sm">Example C: Regular Updates + Layout on Plus</span>
-                <span className="font-mono text-emerald-400 font-bold">$40 flat</span>
+                <span className="font-bold text-white text-sm">Example C: Regular Updates + Layout on Growth</span>
+                <span className="font-mono text-emerald-400 font-bold">$125 flat</span>
               </div>
               <p className="text-neutral-300 leading-relaxed">
-                You are on the <strong>Plus Plan ($40/mo)</strong>. In September, you update 7 product descriptions and ask Jacob to build a brand new FAQ section.
+                You are on <strong>Growth Care ($125/mo)</strong>. In September, you update 7 product descriptions and ask Jacob to build a brand new FAQ section.
               </p>
               <div className="mt-3 pt-2 border-t border-neutral-800/80 text-neutral-400 font-mono">
-                Calculation: All 7 edits &amp; the new layout are 100% included = <strong>$40 flat</strong>
+                Calculation: All 7 edits &amp; the new layout are 100% included = <strong>$125 flat</strong>
               </div>
             </div>
 
             {/* Example 4 */}
             <div className="rounded-xl bg-neutral-950 p-4 border border-amber-400/40">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-white text-sm">Example D: Heavy Promotional Month on Plus</span>
-                <span className="font-mono text-amber-400 font-bold">$56 total</span>
+                <span className="font-bold text-white text-sm">Example D: Heavy Promotional Month on Growth</span>
+                <span className="font-mono text-amber-400 font-bold">$141 total</span>
               </div>
               <p className="text-neutral-300 leading-relaxed">
-                You are on the <strong>Plus Plan ($40/mo)</strong>. You submit 12 small updates (10 included + 2 extra at $3) AND 2 major layout changes (1 included + 1 extra at $10).
+                You are on <strong>Growth Care ($125/mo)</strong>. You submit 12 small updates (10 included + 2 extra at $3) AND 2 major layout changes (1 included + 1 extra at $10).
               </p>
               <div className="mt-3 pt-2 border-t border-neutral-800/80 text-neutral-400 font-mono">
-                Calculation: $40 base + (2 &times; $3) + (1 &times; $10) = <strong>$56 total</strong>
+                Calculation: $125 base + (2 &times; $3) + (1 &times; $10) = <strong>$141 total</strong>
               </div>
             </div>
           </div>
@@ -255,7 +256,7 @@ export function ScopeGuide() {
               Why this beats traditional web agency retainers
             </h4>
             <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-              Traditional web design agencies charge a minimum of $75 to $150 per hour just to change a phone number or swap a team photo. With Jacob George, you get a generous monthly allowance included, and any extra edit is just a flat <strong>$5</strong> on Basic (major layout edits only <strong>+$15</strong>) or a heavily discounted <strong>$3</strong> on Plus (extra big layout edits only <strong>+$10</strong>).
+              Traditional web design agencies charge thousands upfront and $150+ per hour for minor changes. With Jacob George, you get a custom website built for just <strong>$1,000 upfront</strong> paired with transparent monthly care starting at <strong>$100/mo</strong> with generous allowances and ultra-affordable extra edits (only $5 or $3 small, and +$15 or +$10 big).
             </p>
           </div>
         </div>

@@ -11,21 +11,21 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
   const [bigEdits, setBigEdits] = useState<number>(1);
 
   // Calculation logic:
-  // Basic Plan: $20 base covers 3 small updates, 0 big layout edits. Extra small edits = $5 each.
-  // Major layout edits on Basic are +$15 each.
+  // Standard Care: $100 base covers 3 small updates, 0 big layout edits. Extra small edits = $5 each.
+  // Major layout edits on Standard Care are +$15 each.
   const basicIncludedSmall = 3;
   const basicExtraSmall = Math.max(0, smallEdits - basicIncludedSmall);
   const basicBigCost = bigEdits * 15;
-  const basicTotal = 20 + basicExtraSmall * 5 + basicBigCost;
+  const basicTotal = 100 + basicExtraSmall * 5 + basicBigCost;
 
-  // Plus Plan: $40 base covers 10 small updates + 1 big layout edit.
-  // Extra small edits on Plus: ONLY $3 each!
-  // Extra big layout edits on Plus: ONLY +$10 each!
+  // Growth Care: $125 base covers 10 small updates + 1 big layout edit.
+  // Extra small edits on Growth Care: ONLY $3 each!
+  // Extra big layout edits on Growth Care: ONLY +$10 each!
   const plusIncludedSmall = 10;
   const plusIncludedBig = 1;
   const plusExtraSmall = Math.max(0, smallEdits - plusIncludedSmall);
   const plusExtraBig = Math.max(0, bigEdits - plusIncludedBig);
-  const plusTotal = 40 + plusExtraSmall * 3 + plusExtraBig * 10;
+  const plusTotal = 125 + plusExtraSmall * 3 + plusExtraBig * 10;
 
   const bestPlan: PlanId = basicTotal < plusTotal ? 'basic' : 'plus';
   const savings = Math.abs(basicTotal - plusTotal);
@@ -38,10 +38,10 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
             Interactive Cost Estimator
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white [text-wrap:balance]">
-            Calculate your monthly maintenance cost
+            Calculate your ongoing monthly care cost
           </h2>
           <p className="mt-4 text-base text-neutral-400 leading-relaxed">
-            Estimate your monthly updates to see exactly how much you will pay. On the Plus Plan, extra edits are heavily discounted at only <span className="text-amber-400 font-semibold">$3/small</span> and <span className="text-amber-400 font-semibold">+$10/big</span>.
+            All custom websites start with a <span className="text-white font-semibold">$1,000 upfront build</span>. Select your expected monthly update volume below to estimate your monthly care. Extra edits are super affordable: only <span className="text-amber-400 font-semibold">$5 small / +$15 big</span> on Standard Care, and <span className="text-amber-400 font-semibold">$3 small / +$10 big</span> on Growth Care.
           </p>
         </div>
 
@@ -80,8 +80,8 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
               />
               <div className="flex justify-between text-[11px] text-neutral-500 mt-2">
                 <span>0 updates</span>
-                <span>3 (Basic limit)</span>
-                <span>10 (Plus limit)</span>
+                <span>3 (Standard Care)</span>
+                <span>10 (Growth Care)</span>
                 <span>20 updates</span>
               </div>
             </div>
@@ -118,7 +118,7 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                 </div>
               </div>
               <div className="text-[11px] text-amber-400/90 bg-amber-400/10 p-2 rounded border border-amber-400/20 mt-3">
-                1 big edit is already included in Plus Plan ($40). Any extra big edits on Plus are only +$10 each (versus +$15 on Basic)!
+                1 big edit is already included in Growth Care ($125). Any extra big edits are only +$10 each (versus +$15 on Standard)!
               </div>
             </div>
 
@@ -152,7 +152,7 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                       : 'border-neutral-800 text-neutral-300 hover:border-neutral-700 bg-neutral-950'
                   }`}
                 >
-                  Standard Plus (6 small, 1 big)
+                  Active Growth (6 small, 1 big)
                 </button>
                 <button
                   type="button"
@@ -174,7 +174,7 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
 
           {/* Results Comparison Column */}
           <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Basic Plan Result */}
+            {/* Standard Care Result */}
             <div
               className={`rounded-2xl p-6 border transition-all ${
                 bestPlan === 'basic'
@@ -183,7 +183,7 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-base font-bold text-white">Basic Plan</span>
+                <span className="text-base font-bold text-white">Standard Care</span>
                 {bestPlan === 'basic' && (
                   <span className="text-[11px] font-semibold text-amber-400 uppercase tracking-wider bg-amber-400/10 px-2 py-0.5 rounded">
                     Best Value
@@ -197,11 +197,14 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                 </span>
                 <span className="text-xs text-neutral-400">/ month</span>
               </div>
+              <div className="text-[10px] text-neutral-500 mt-0.5">
+                +$1,000 upfront custom build
+              </div>
 
               <div className="mt-4 space-y-2 text-xs text-neutral-300 border-t border-neutral-800 pt-3">
                 <div className="flex justify-between">
                   <span className="text-neutral-400">Base (3 small updates):</span>
-                  <span className="font-mono text-neutral-200 tabular-nums">$20</span>
+                  <span className="font-mono text-neutral-200 tabular-nums">$100</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-neutral-400">
@@ -228,12 +231,12 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                     : 'bg-neutral-800 text-neutral-200 hover:bg-neutral-700'
                 }`}
               >
-                Choose Basic Plan
+                Choose Standard Care
                 <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </div>
 
-            {/* Plus Plan Result */}
+            {/* Growth Care Result */}
             <div
               className={`rounded-2xl p-6 border transition-all ${
                 bestPlan === 'plus'
@@ -243,7 +246,7 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
             >
               <div className="flex items-center justify-between">
                 <span className="text-base font-bold text-white flex items-center gap-1.5">
-                  Plus Plan
+                  Growth Care
                   <Sparkles className="h-3.5 w-3.5 text-amber-400" />
                 </span>
                 {bestPlan === 'plus' && (
@@ -259,11 +262,14 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                 </span>
                 <span className="text-xs text-neutral-400">/ month</span>
               </div>
+              <div className="text-[10px] text-neutral-500 mt-0.5">
+                +$1,000 upfront custom build
+              </div>
 
               <div className="mt-4 space-y-2 text-xs text-neutral-300 border-t border-neutral-800 pt-3">
                 <div className="flex justify-between">
                   <span className="text-neutral-400">Base (10 small + 1 big):</span>
-                  <span className="font-mono text-neutral-200 tabular-nums">$40</span>
+                  <span className="font-mono text-neutral-200 tabular-nums">$125</span>
                 </div>
                 <div className="flex justify-between text-amber-300 font-medium">
                   <span>
@@ -292,7 +298,7 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                     : 'bg-neutral-800 text-neutral-200 hover:bg-neutral-700'
                 }`}
               >
-                Choose Plus Plan
+                Choose Growth Care
                 <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </div>
@@ -303,8 +309,8 @@ export function PlanCalculator({ onOpenIntake }: PlanCalculatorProps) {
                 <Check className="h-4 w-4 text-amber-400 shrink-0" />
                 <span className="text-neutral-300">
                   {bestPlan === 'plus'
-                    ? `Plus Plan gives you 10 small + 1 big included, and ultra-cheap extra edits ($3 small, +$10 big).`
-                    : `Basic Plan is optimal for lower monthly update frequency.`}
+                    ? `Growth Care gives you 10 small + 1 big included, and ultra-cheap extra edits ($3 small, +$10 big).`
+                    : `Standard Care is optimal for lower monthly update frequency.`}
                 </span>
               </div>
               {savings > 0 && (

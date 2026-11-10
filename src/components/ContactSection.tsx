@@ -33,7 +33,7 @@ export function ContactSection({ onOpenFullContactPage }: ContactSectionProps) {
     email,
     phone,
     websiteUrl: siteUrl,
-    planOrService: selectedPlan === 'custom' ? 'Custom Website Build / Redesign ($1,000 even)' : `${currentPlan.name} ($${currentPlan.price}/month)`,
+    planOrService: `$1,000 Upfront Build + ${currentPlan.name} ($${currentPlan.price}/month)`,
     notesOrMessage: message,
   };
 
@@ -173,49 +173,42 @@ export function ContactSection({ onOpenFullContactPage }: ContactSectionProps) {
             {/* Plan Selection Buttons */}
             <div className="mb-4">
               <label className="block text-xs font-medium text-neutral-300 mb-2">
-                Interested Plan / Service
+                Choose Your Plan ($1,000 Upfront Build + Monthly Care)
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setSelectedPlan('basic')}
-                  className={`cursor-pointer p-2.5 rounded-lg border text-left text-xs transition-colors ${
+                  className={`cursor-pointer p-3 rounded-xl border text-left text-xs transition-colors ${
                     selectedPlan === 'basic'
-                      ? 'border-amber-400 bg-neutral-950 text-white font-semibold'
+                      ? 'border-amber-400 bg-neutral-950 text-white font-semibold ring-1 ring-amber-400/30'
                       : 'border-neutral-800 bg-neutral-900/80 text-neutral-400 hover:border-neutral-700'
                   }`}
                 >
-                  <div>Basic Plan</div>
-                  <div className="text-amber-400 font-mono text-[11px] font-bold tabular-nums">$20/mo</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedPlan('plus')}
-                  className={`cursor-pointer p-2.5 rounded-lg border text-left text-xs transition-colors ${
-                    selectedPlan === 'plus'
-                      ? 'border-amber-400 bg-neutral-950 text-white font-semibold'
-                      : 'border-neutral-800 bg-neutral-900/80 text-neutral-400 hover:border-neutral-700'
-                  }`}
-                >
-                  <div>Plus Plan</div>
-                  <div className="text-amber-400 font-mono text-[11px] font-bold tabular-nums">
-                    $40/mo (Extras: $3/$5)
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white">Standard Care</span>
+                    <span className="text-amber-400 font-mono text-xs font-bold tabular-nums">$100/mo</span>
+                  </div>
+                  <div className="text-neutral-400 text-[11px] mt-1">
+                    $1,000 upfront build + 3 updates/mo &amp; hosting
                   </div>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => setSelectedPlan('custom')}
-                  className={`cursor-pointer p-2.5 rounded-lg border text-left text-xs transition-colors col-span-2 sm:col-span-1 ${
-                    selectedPlan === 'custom'
-                      ? 'border-amber-400 bg-neutral-950 text-white font-semibold'
+                  onClick={() => setSelectedPlan('plus')}
+                  className={`cursor-pointer p-3 rounded-xl border text-left text-xs transition-colors ${
+                    selectedPlan === 'plus'
+                      ? 'border-amber-400 bg-neutral-950 text-white font-semibold ring-1 ring-amber-400/30'
                       : 'border-neutral-800 bg-neutral-900/80 text-neutral-400 hover:border-neutral-700'
                   }`}
                 >
-                  <div>Custom Website</div>
-                  <div className="text-amber-400 font-mono text-[11px] font-bold tabular-nums">
-                    $1,000 even
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white">Growth Care</span>
+                    <span className="text-amber-400 font-mono text-xs font-bold tabular-nums">$125/mo</span>
+                  </div>
+                  <div className="text-neutral-400 text-[11px] mt-1">
+                    $1,000 upfront build + 10 updates &amp; 1 big layout edit
                   </div>
                 </button>
               </div>

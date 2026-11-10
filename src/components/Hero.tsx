@@ -29,21 +29,21 @@ export function Hero({ onOpenIntake }: HeroProps) {
 
             {/* Quick pricing callout */}
             <div className="mt-6 p-4 rounded-xl border border-neutral-800 bg-neutral-900/60 max-w-xl">
-              <div className="text-xs text-neutral-400 mb-2">Transparent Pricing:</div>
+              <div className="text-xs text-neutral-400 mb-2">Transparent Pricing Structure:</div>
               <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-semibold text-white">Basic:</span>
-                  <span className="font-mono text-amber-400 font-semibold tabular-nums">$20/mo</span>
+                  <span className="font-semibold text-white">Upfront Build:</span>
+                  <span className="font-mono text-amber-400 font-bold tabular-nums">$1,000</span>
                 </div>
                 <div className="h-3.5 w-px bg-neutral-800 hidden sm:block"></div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-semibold text-white">Plus:</span>
-                  <span className="font-mono text-amber-400 font-semibold tabular-nums">$40/mo</span>
+                  <span className="font-semibold text-white">Standard Care:</span>
+                  <span className="font-mono text-amber-400 font-semibold tabular-nums">$100/mo</span>
                 </div>
                 <div className="h-3.5 w-px bg-neutral-800 hidden sm:block"></div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-semibold text-white">Custom Build:</span>
-                  <span className="font-mono text-amber-400 font-bold tabular-nums">$1,000 even</span>
+                  <span className="font-semibold text-white">Growth Care:</span>
+                  <span className="font-mono text-amber-400 font-semibold tabular-nums">$125/mo</span>
                 </div>
               </div>
             </div>
@@ -54,7 +54,7 @@ export function Hero({ onOpenIntake }: HeroProps) {
                 href="#plans"
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-6 py-3.5 text-sm font-semibold text-neutral-950 hover:bg-amber-300 transition-colors whitespace-nowrap"
               >
-                Explore Maintenance Plans
+                Explore Pricing &amp; Plans
                 <ArrowRight className="h-4 w-4" />
               </a>
 
@@ -63,7 +63,7 @@ export function Hero({ onOpenIntake }: HeroProps) {
                 onClick={() => onOpenIntake('basic')}
                 className="cursor-pointer inline-flex items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 px-5 py-3.5 text-sm font-medium text-neutral-200 hover:bg-neutral-800 hover:text-white transition-colors whitespace-nowrap"
               >
-                Start Maintenance Setup
+                Start $1,000 Build + Care
               </button>
             </div>
 
@@ -91,7 +91,7 @@ export function Hero({ onOpenIntake }: HeroProps) {
               </span>
               <span aria-hidden="true">·</span>
               <span className="flex items-center gap-1.5 text-neutral-300 font-medium">
-                <CheckCircle2 className="h-3.5 w-3.5 text-amber-400" /> Extra edits from $3
+                <CheckCircle2 className="h-3.5 w-3.5 text-amber-400" /> Dedicated Developer Care
               </span>
               <span aria-hidden="true">·</span>
               <span>Month-to-month / Cancel anytime</span>
@@ -130,16 +130,16 @@ export function Hero({ onOpenIntake }: HeroProps) {
         {/* 4-Item Proof Bar below the hero */}
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 border-t border-neutral-800/80">
           <div>
+            <div className="text-2xl font-bold font-mono text-white tabular-nums">$1,000</div>
+            <div className="text-xs text-neutral-400 mt-1">Upfront custom website build</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold font-mono text-amber-400 tabular-nums">$100 &amp; $125</div>
+            <div className="text-xs text-neutral-400 mt-1">Monthly care tiers ($100+)</div>
+          </div>
+          <div>
             <div className="text-2xl font-bold font-mono text-white tabular-nums">24–48h</div>
-            <div className="text-xs text-neutral-400 mt-1">Average update completion time</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold font-mono text-amber-400 tabular-nums">$20 &amp; $40</div>
-            <div className="text-xs text-neutral-400 mt-1">Transparent monthly tiers</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold font-mono text-white tabular-nums">$3 &amp; $5</div>
-            <div className="text-xs text-neutral-400 mt-1">Extra edits on Plus ($3 small / $5 big)</div>
+            <div className="text-xs text-neutral-400 mt-1">Rapid edit turnaround time</div>
           </div>
           <div>
             <div className="text-2xl font-bold font-mono text-white tabular-nums">1-on-1</div>

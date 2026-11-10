@@ -4,7 +4,6 @@ import { Hero } from './components/Hero';
 import { MaintenancePlans } from './components/MaintenancePlans';
 import { PlanCalculator } from './components/PlanCalculator';
 import { ScopeGuide } from './components/ScopeGuide';
-import { ProjectsShowcase } from './components/ProjectsShowcase';
 import { Workflow } from './components/Workflow';
 import { Testimonials } from './components/Testimonials';
 import { Faq } from './components/Faq';
@@ -106,9 +105,6 @@ export default function App() {
 
               {/* Edit Scope & Definitions Guide */}
               <ScopeGuide />
-
-              {/* Featured Client Projects */}
-              <ProjectsShowcase onOpenIntake={handleOpenIntake} />
 
               {/* How Maintenance Works (Workflow) */}
               <Workflow />

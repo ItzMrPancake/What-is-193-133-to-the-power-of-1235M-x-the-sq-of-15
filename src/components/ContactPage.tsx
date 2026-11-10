@@ -57,15 +57,13 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
   const getServiceLabel = () => {
     switch (selectedService) {
       case 'basic':
-        return 'Basic Maintenance Plan ($20/month)';
+        return '$1,000 Upfront Build + Standard Care ($100/month · Extras: $5 small / $15 big)';
       case 'plus':
-        return 'Plus Maintenance Plan ($40/month · Extras: $3 small / $5 big)';
-      case 'custom':
-        return 'Custom Website Development / Redesign ($1,000 even)';
+        return '$1,000 Upfront Build + Growth Care ($125/month · Extras: $3 small / $10 big)';
       case 'speed':
         return 'Website Speed & Performance Optimization';
       default:
-        return 'General Website Inquiry';
+        return '$1,000 Upfront Custom Website Build & Monthly Care';
     }
   };
 
@@ -113,10 +111,10 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
             Direct Developer Communication
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white [text-wrap:balance]">
-            Let&apos;s talk about your website.
+            Let&apos;s build and protect your website.
           </h1>
           <p className="mt-4 text-base sm:text-lg text-neutral-400 leading-relaxed">
-            Whether you need the <span className="text-white font-medium">Basic Plan ($20/mo)</span>, <span className="text-white font-medium">Plus Plan ($40/mo)</span>, or a brand-new high-performance custom build (<span className="text-amber-400 font-semibold">$1,000 even</span>), send me a message directly. I personally review every inquiry and reply within 24 hours.
+            Every custom website project starts with a <span className="text-white font-semibold">$1,000 upfront build fee</span>, combined with dedicated monthly developer care: <span className="text-amber-400 font-medium">Standard Care ($100/mo)</span> or <span className="text-amber-400 font-medium">Growth Care ($125/mo)</span>. Send me a message directly—I reply within 24 hours.
           </p>
         </div>
 
@@ -304,71 +302,67 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                 {/* Service Selection */}
                 <div>
                   <label className="block text-xs font-semibold text-neutral-300 mb-2">
-                    What service do you need? <span className="text-amber-400">*</span>
+                    What plan or service do you need? <span className="text-amber-400">*</span>
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <p className="text-[11px] text-neutral-400 mb-3">
+                    Every custom website project starts with a <strong>$1,000 upfront build fee</strong> paired with your monthly developer care plan.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <button
                       type="button"
                       onClick={() => setSelectedService('basic')}
-                      className={`cursor-pointer p-3 rounded-xl border text-left transition-all ${
+                      className={`cursor-pointer p-3.5 rounded-xl border text-left transition-all ${
                         selectedService === 'basic'
                           ? 'border-amber-400 bg-neutral-950 text-white font-semibold ring-1 ring-amber-400/30'
                           : 'border-neutral-800 bg-neutral-900/40 text-neutral-400 hover:border-neutral-700'
                       }`}
                     >
-                      <div className="text-xs font-bold text-white">Basic Maintenance</div>
-                      <div className="text-amber-400 font-mono text-[11px] font-semibold tabular-nums">
-                        $20 / mo (3 updates)
+                      <div className="text-xs font-bold text-white">Standard Care Package</div>
+                      <div className="text-amber-400 font-mono text-xs font-bold tabular-nums mt-0.5">
+                        $100 / mo <span className="text-neutral-400 font-normal text-[11px]">(+$1,000 upfront build)</span>
+                      </div>
+                      <div className="text-neutral-400 text-[11px] mt-1">
+                        3 small updates/mo, managed hosting &amp; monthly security maintenance
                       </div>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setSelectedService('plus')}
-                      className={`cursor-pointer p-3 rounded-xl border text-left transition-all ${
+                      className={`cursor-pointer p-3.5 rounded-xl border text-left transition-all ${
                         selectedService === 'plus'
                           ? 'border-amber-400 bg-neutral-950 text-white font-semibold ring-1 ring-amber-400/30'
                           : 'border-neutral-800 bg-neutral-900/40 text-neutral-400 hover:border-neutral-700'
                       }`}
                     >
                       <div className="text-xs font-bold text-white flex items-center justify-between">
-                        <span>Plus Maintenance</span>
+                        <span>Growth Care Package</span>
                         <Sparkles className="h-3 w-3 text-amber-400" />
                       </div>
-                      <div className="text-amber-400 font-mono text-[11px] font-semibold tabular-nums">
-                        $40 / mo (Extras: $3/$5)
+                      <div className="text-amber-400 font-mono text-xs font-bold tabular-nums mt-0.5">
+                        $125 / mo <span className="text-neutral-400 font-normal text-[11px]">(+$1,000 upfront build)</span>
                       </div>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setSelectedService('custom')}
-                      className={`cursor-pointer p-3 rounded-xl border text-left transition-all ${
-                        selectedService === 'custom'
-                          ? 'border-amber-400 bg-neutral-950 text-white font-semibold ring-1 ring-amber-400/30'
-                          : 'border-neutral-800 bg-neutral-900/40 text-neutral-400 hover:border-neutral-700'
-                      }`}
-                    >
-                      <div className="text-xs font-bold text-white flex items-center justify-between">
-                        <span>Custom Web Development</span>
-                        <span className="text-amber-400 font-mono text-[11px] font-bold tabular-nums">
-                          $1,000 even
-                        </span>
+                      <div className="text-neutral-400 text-[11px] mt-1">
+                        10 updates/mo, 1 major layout edit/mo, lowest extras ($3/$10)
                       </div>
-                      <div className="text-neutral-400 text-[11px]">Bespoke React / Next.js New Build or Redesign</div>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setSelectedService('speed')}
-                      className={`cursor-pointer p-3 rounded-xl border text-left transition-all ${
+                      className={`cursor-pointer p-3.5 rounded-xl border text-left transition-all sm:col-span-2 ${
                         selectedService === 'speed'
                           ? 'border-amber-400 bg-neutral-950 text-white font-semibold ring-1 ring-amber-400/30'
                           : 'border-neutral-800 bg-neutral-900/40 text-neutral-400 hover:border-neutral-700'
                       }`}
                     >
-                      <div className="text-xs font-bold text-white">Speed &amp; Performance</div>
-                      <div className="text-neutral-400 text-[11px]">Sub-second optimization</div>
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs font-bold text-white">Speed &amp; Performance Audit</div>
+                        <span className="text-amber-400 text-[11px] font-semibold">Existing Sites</span>
+                      </div>
+                      <div className="text-neutral-400 text-[11px] mt-0.5">
+                        Deep-dive audit &amp; sub-second performance optimization for already deployed websites
+                      </div>
                     </button>
                   </div>
                 </div>
@@ -588,7 +582,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                   <div>
                     <div className="font-semibold text-white">Seamless Plan Setup</div>
                     <div className="text-neutral-400 mt-0.5">
-                      If you choose Basic ($20) or Plus ($40), we complete onboarding in 15 minutes with no site downtime.
+                      Whether you choose Standard Care ($100/mo) or Growth Care ($125/mo), we initiate your $1,000 custom build and ongoing support immediately.
                     </div>
                   </div>
                 </li>
@@ -607,38 +601,40 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
 
             {/* Quick Pricing Recall Card */}
             <div className="rounded-2xl border border-neutral-800 bg-neutral-900/40 p-6">
-              <h2 className="text-base font-bold text-white mb-3 flex items-center gap-2">
+              <h2 className="text-base font-bold text-white mb-1 flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-amber-400" />
-                Maintenance Plans Quick Summary
+                Build &amp; Care Plans Summary
               </h2>
+              <p className="text-[11px] text-neutral-400 mb-4">
+                All projects include a <strong>$1,000 upfront custom build</strong> paired with monthly developer care.
+              </p>
               <div className="space-y-3 text-xs">
-                <div className="p-3 rounded-lg bg-neutral-950 border border-neutral-800">
+                <div className="p-3.5 rounded-lg bg-neutral-950 border border-neutral-800">
                   <div className="flex justify-between font-semibold text-white">
-                    <span>Basic Plan</span>
-                    <span className="text-amber-400 font-mono tabular-nums">$20/mo</span>
+                    <span>Standard Care Package</span>
+                    <span className="text-amber-400 font-mono tabular-nums">$100/mo</span>
+                  </div>
+                  <div className="text-amber-400/80 font-mono text-[11px] mt-0.5">
+                    +$1,000 upfront custom build
                   </div>
                   <div className="text-neutral-400 text-[11px] mt-1">
-                    Hosting + Security + 3 small updates/mo ($5 extra edits)
+                    Managed hosting + SSL + 3 updates/mo (extra small: $5, layout: $15)
                   </div>
                 </div>
 
-                <div className="p-3 rounded-lg bg-neutral-950 border border-amber-400/40">
+                <div className="p-3.5 rounded-lg bg-neutral-950 border border-amber-400/40">
                   <div className="flex justify-between font-semibold text-white">
-                    <span>Plus Plan</span>
-                    <span className="text-amber-400 font-mono tabular-nums">$40/mo</span>
+                    <span className="flex items-center gap-1.5">
+                      <span>Growth Care Package</span>
+                      <Sparkles className="h-3 w-3 text-amber-400" />
+                    </span>
+                    <span className="text-amber-400 font-mono tabular-nums">$125/mo</span>
+                  </div>
+                  <div className="text-amber-400/80 font-mono text-[11px] mt-0.5">
+                    +$1,000 upfront custom build
                   </div>
                   <div className="text-neutral-400 text-[11px] mt-1">
-                    Hosting + Priority + 10 small + 1 big edit/mo (Extras: $3 small / $5 big)
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-lg bg-neutral-950 border border-neutral-800">
-                  <div className="flex justify-between font-semibold text-white">
-                    <span>Custom Website Build</span>
-                    <span className="text-amber-400 font-mono tabular-nums font-bold">$1,000 even</span>
-                  </div>
-                  <div className="text-neutral-400 text-[11px] mt-1">
-                    Brand-new custom responsive build or full redesign
+                    Managed hosting + 10 updates + 1 major layout edit/mo (extra small: $3, layout: $10)
                   </div>
                 </div>
               </div>
