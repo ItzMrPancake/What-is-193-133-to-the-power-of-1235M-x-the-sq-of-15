@@ -1,16 +1,8 @@
-import { useState, useEffect } from 'react';
-import { X, Mail, Phone, ExternalLink, Copy, CheckCheck, Sparkles, Smartphone, HelpCircle } from 'lucide-react';
+import { useState, useEffect, FormEvent } from 'react';
+import { X, Phone, Sparkles, Send, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { PlanId } from '../types';
 import { PLANS, DEVELOPER_PROFILE } from '../data/content';
-import {
-  getWebGmailLink,
-  getWebOutlookLink,
-  getMailtoLink,
-  dispatchMailtoUniversal,
-  buildInquirySummary,
-  PRIMARY_RECIPIENT_EMAILS,
-  PRIMARY_RECIPIENT_EMAIL,
-} from '../utils/sendInquiry';
+import { submitFormSubmitAjax } from '../utils/sendInquiry';
 
 interface IntakeModalProps {
   isOpen: boolean;
@@ -28,12 +20,14 @@ export function IntakeModal({
   const [selectedPlanId, setSelectedPlanId] = useState<PlanId>(initialPlanId);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [websiteUrl, setWebsiteUrl] = useState('');
-  const [editsEstimate, setEditsEstimate] = useState<number>(initialEdits);
   const [notes, setNotes] = useState('');
-  const [copied, setCopied] = useState(false);
-  const [mailAppAttempted, setMailAppAttempted] = useState(false);
+  const [editsEstimate, setEditsEstimate] = useState<number>(initialEdits);
+  const [honey, setHoney] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [successDetail, setSuccessDetail] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialPlanId) {
@@ -52,35 +46,50 @@ export function IntakeModal({
   const currentPlan = PLANS.find((p) => p.id === selectedPlanId) || PLANS[0];
   const planLabel = `$1,000 Upfront Build + ${currentPlan.name} ($${currentPlan.price}/month)`;
 
-  const payload = {
-    name,
-    email,
-    phone,
-    websiteUrl,
-    planOrService: planLabel,
-    notesOrMessage: notes,
-    editsEstimate,
-  };
-
-  const webGmailLink = getWebGmailLink(payload);
-  const webOutlookLink = getWebOutlookLink(payload);
-  const deviceMailtoLink = getMailtoLink(payload);
-  const messagePreview = buildInquirySummary(payload);
-
-  const handleCopySummary = async () => {
-    try {
-      await navigator.clipboard.writeText(messagePreview);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    } catch {
-      // Fallback
-    }
-  };
-
-  const handleLaunchDeviceMail = (e: React.MouseEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMailAppAttempted(true);
-    dispatchMailtoUniversal(deviceMailtoLink);
+    setSubmitError(null);
+    setSubmitSuccess(false);
+    setSuccessDetail(null);
+
+    const formData = new FormData(e.currentTarget);
+    const honeyValue = String(formData.get('_honey') ?? honey);
+
+    // Stop submission if _honey is filled
+    if (honeyValue.trim() !== '') {
+      return;
+    }
+
+    const fieldValues = Object.fromEntries(
+      Array.from(formData.entries()).map(([k, v]) => [k, String(v)])
+    );
+
+    setIsSubmitting(true);
+    try {
+      const result = await submitFormSubmitAjax({
+        ...fieldValues,
+        estimatedMonthlyEdits: editsEstimate,
+        _honey: honeyValue,
+      });
+
+      if (result.sent) {
+        setName('');
+        setEmail('');
+        setWebsiteUrl('');
+        setNotes('');
+        setHoney('');
+        setSuccessDetail(result.message ?? null);
+        setSubmitSuccess(true);
+      }
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : 'Unable to send your message right now. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -98,13 +107,13 @@ export function IntakeModal({
         {/* Modal Header */}
         <div className="text-xs font-semibold tracking-wider uppercase text-amber-400 mb-1 flex items-center gap-1.5">
           <Sparkles className="h-3.5 w-3.5" />
-          Direct Email Dispatch · Direct to Jacob George
+          Contact · Direct to Jacob George
         </div>
         <h3 className="text-2xl font-bold text-white">
-          Start Your Website Build &amp; Care
+          Contact Jacob George
         </h3>
         <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-          Every website requires a <strong>$1,000 upfront build fee</strong> paired with your chosen monthly care tier. Select your plan below and choose <strong>Gmail</strong> or your <strong>Device Mail App</strong> to dispatch your project directly to Jacob George.
+          Every website requires a <strong>$1,000 upfront build fee</strong> paired with your chosen monthly care tier. Select your plan and submit the form below to reach Jacob directly.
         </p>
 
         {/* Plan / Project Selector Buttons */}
@@ -148,21 +157,54 @@ export function IntakeModal({
           </div>
         </div>
 
-        {/* Customization Fields */}
-        <div className="mt-5 space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label htmlFor="intake-name" className="block text-xs font-medium text-neutral-300 mb-1">
-                Your Name (Optional)
-              </label>
-              <input
-                id="intake-name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Alex Morgan"
-                className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
-              />
+        <form onSubmit={handleSubmit} className="mt-5 space-y-3">
+          {/* Hidden spam-protection honeypot & selected plan */}
+          <input
+            type="text"
+            name="_honey"
+            value={honey}
+            onChange={(e) => setHoney(e.target.value)}
+            className="hidden"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
+          <input type="hidden" name="plan" value={planLabel} />
+
+          {/* Customization Fields */}
+          <div className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label htmlFor="intake-name" className="block text-xs font-medium text-neutral-300 mb-1">
+                  Your Name <span className="text-amber-400">*</span>
+                </label>
+                <input
+                  id="intake-name"
+                  name="name"
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Alex Morgan"
+                  className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="intake-email" className="block text-xs font-medium text-neutral-300 mb-1">
+                  Email Address <span className="text-amber-400">*</span>
+                </label>
+                <input
+                  id="intake-email"
+                  name="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@company.com"
+                  className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
+                />
+              </div>
             </div>
 
             <div>
@@ -171,6 +213,7 @@ export function IntakeModal({
               </label>
               <input
                 id="intake-url"
+                name="websiteUrl"
                 type="text"
                 value={websiteUrl}
                 onChange={(e) => setWebsiteUrl(e.target.value)}
@@ -178,105 +221,73 @@ export function IntakeModal({
                 className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
               />
             </div>
+
+            <div>
+              <label htmlFor="intake-notes" className="block text-xs font-medium text-neutral-300 mb-1">
+                Message or Project Goals <span className="text-amber-400">*</span>
+              </label>
+              <textarea
+                id="intake-notes"
+                name="message"
+                rows={3}
+                required
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Tell Jacob about your website goals, design style, or monthly updates needed..."
+                className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none resize-none"
+              />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="intake-notes" className="block text-xs font-medium text-neutral-300 mb-1">
-              Notes or Questions (Optional)
-            </label>
-            <input
-              id="intake-notes"
-              type="text"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Tell Jacob about your website goals, design style, or features needed"
-              className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
-            />
-          </div>
-        </div>
-
-        {/* THE ONLY TWO SEND OPTIONS */}
-        <div className="mt-5 space-y-2.5">
-          <div className="text-xs font-bold text-neutral-200 uppercase tracking-wider text-center">
-            Choose Your Sending Method:
-          </div>
-
-          {/* Button 1: Send via Gmail */}
-          <a
-            href={webGmailLink}
-            target="_blank"
-            rel="noreferrer"
-            className="w-full cursor-pointer rounded-xl bg-amber-400 py-3.5 px-4 text-xs font-bold text-neutral-950 hover:bg-amber-300 active:scale-[0.99] transition-all flex items-center justify-center gap-2.5 shadow-lg shadow-amber-950/25 text-center"
-          >
-            <Mail className="h-4 w-4" />
-            <span>Send via Gmail</span>
-            <span className="text-[11px] font-normal opacity-80">(Opens Web Gmail)</span>
-            <ExternalLink className="h-3.5 w-3.5 ml-auto opacity-70" />
-          </a>
-
-          {/* Button 2: Send via Device Mail App */}
-          <button
-            type="button"
-            onClick={handleLaunchDeviceMail}
-            className="w-full cursor-pointer rounded-xl border border-neutral-700 bg-neutral-900 py-3.5 px-4 text-xs font-bold text-white hover:bg-neutral-800 active:scale-[0.99] transition-all flex items-center justify-center gap-2.5 text-center shadow-md"
-          >
-            <Smartphone className="h-4 w-4 text-sky-400" />
-            <span>Send via Mail App on Your Device</span>
-            <span className="text-[11px] font-normal text-neutral-400">(iPhone, Mac, Android, PC)</span>
-          </button>
-
-          {/* Fallback box if computer does not have a native mail client set up */}
-          {mailAppAttempted && (
-            <div className="p-3 rounded-xl bg-neutral-900/90 border border-neutral-700 text-xs text-neutral-300 space-y-2 animate-in fade-in">
-              <div className="flex items-center gap-1.5 text-amber-400 font-medium">
-                <HelpCircle className="h-3.5 w-3.5" />
-                Did your device mail app not open?
-              </div>
-              <p className="text-[11px] text-neutral-400 leading-relaxed">
-                Many PCs and browsers don&apos;t have a default email application configured. You can use <strong>Outlook Web</strong>, <strong>Gmail</strong>, or copy the text:
-              </p>
-              <div className="flex flex-wrap gap-2 pt-1">
-                <a
-                  href={webOutlookLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs font-medium hover:bg-sky-500/30 transition-colors"
-                >
-                  <Mail className="h-3.5 w-3.5" />
-                  Open in Outlook Web &rarr;
-                </a>
-                <a
-                  href={webGmailLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-medium hover:bg-amber-400/30 transition-colors"
-                >
-                  <Mail className="h-3.5 w-3.5" />
-                  Open in Gmail &rarr;
-                </a>
-                <button
-                  type="button"
-                  onClick={handleCopySummary}
-                  className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-neutral-800 text-neutral-200 text-xs font-medium hover:bg-neutral-700 transition-colors"
-                >
-                  {copied ? <CheckCheck className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-                  {copied ? 'Copied!' : 'Copy Text'}
-                </button>
+          {/* Feedback States */}
+          {submitSuccess && (
+            <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-700/60 text-xs text-emerald-200 flex items-start gap-2.5">
+              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <div className="font-semibold text-emerald-300">Message sent successfully!</div>
+                <p className="text-emerald-200/80 mt-0.5">
+                  {successDetail ||
+                    'Thank you for reaching out. Jacob has received your inquiry and will reply within 24 hours.'}
+                </p>
               </div>
             </div>
           )}
-        </div>
+
+          {submitError && (
+            <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-800/70 text-xs text-rose-200 flex items-start gap-2.5">
+              <AlertCircle className="h-4 w-4 text-rose-400 shrink-0 mt-0.5" />
+              <div>
+                <div className="font-semibold text-rose-300">Unable to send message</div>
+                <p className="text-rose-200/80 mt-0.5">{submitError}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Submit Action Area */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full cursor-pointer rounded-xl bg-amber-400 py-3.5 px-4 text-xs font-bold text-neutral-950 hover:bg-amber-300 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/25 text-center"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Sending Message...</span>
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  <span>Send Message</span>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
 
         {/* Secondary Utility Controls */}
         <div className="mt-4 pt-3 border-t border-neutral-800 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <button
-            type="button"
-            onClick={handleCopySummary}
-            className="cursor-pointer text-neutral-400 hover:text-white transition-colors flex items-center gap-1.5"
-          >
-            {copied ? <CheckCheck className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-            {copied ? 'Copied to Clipboard!' : 'Copy Message Text'}
-          </button>
+          <span className="text-neutral-500">Direct reply within 24 hours</span>
 
           <a
             href={`tel:${DEVELOPER_PROFILE.phone}`}

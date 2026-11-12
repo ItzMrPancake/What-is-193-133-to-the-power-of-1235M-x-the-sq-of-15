@@ -113,3 +113,56 @@ export function dispatchMailtoUniversal(mailtoUrl: string) {
     }
   }
 }
+
+export const FORMSUBMIT_AJAX_ENDPOINT = 'https://formsubmit.co/ajax/jacobg.webdev@gmail.com';
+
+export interface FormSubmitFields {
+  [key: string]: string | number | undefined;
+  _honey?: string;
+}
+
+export interface FormSubmitResult {
+  sent: boolean;
+  message?: string;
+}
+
+export async function submitFormSubmitAjax(fields: FormSubmitFields): Promise<FormSubmitResult> {
+  // Stop submission if _honey is filled (spam protection)
+  if (fields._honey && String(fields._honey).trim() !== '') {
+    return { sent: false };
+  }
+
+  const payload: Record<string, string | number> = {
+    ...Object.fromEntries(
+      Object.entries(fields)
+        .filter(([key, value]) => key !== '_honey' && key !== '_subject' && key !== '_captcha' && value !== undefined)
+        .map(([key, value]) => [key, value as string | number])
+    ),
+    _subject: 'New Contact Form Submission',
+    _captcha: 'false',
+    _honey: fields._honey ? String(fields._honey) : '',
+  };
+
+  const response = await fetch(FORMSUBMIT_AJAX_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => null);
+  const serverMessage =
+    data && typeof data.message === 'string' && data.message.trim() !== ''
+      ? data.message.trim()
+      : undefined;
+
+  if (!response.ok || (data && (data.success === 'false' || data.success === false))) {
+    throw new Error(
+      serverMessage || 'Failed to send your message. Please try again.'
+    );
+  }
+
+  return { sent: true, message: serverMessage };
+}

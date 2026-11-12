@@ -1,29 +1,21 @@
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import {
   Mail,
   Phone,
   Clock,
   ShieldCheck,
   Send,
-  Check,
   Copy,
   CheckCheck,
   ArrowLeft,
-  Calendar,
-  Globe,
   Sparkles,
-  HelpCircle,
   Loader2,
+  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react';
-import { DEVELOPER_PROFILE, PLANS } from '../data/content';
+import { DEVELOPER_PROFILE } from '../data/content';
 import { PlanId } from '../types';
-import {
-  getMailtoLink,
-  getWebGmailLink,
-  getWebOutlookLink,
-  dispatchMailtoUniversal,
-  buildInquirySummary,
-} from '../utils/sendInquiry';
+import { submitFormSubmitAjax } from '../utils/sendInquiry';
 
 interface ContactPageProps {
   onNavigateHome: () => void;
@@ -39,8 +31,10 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [timeline, setTimeline] = useState('immediate');
   const [message, setMessage] = useState('');
+  const [honey, setHoney] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [successDetail, setSuccessDetail] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,25 +61,52 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
     }
   };
 
-  const payload = {
-    name,
-    email,
-    phone,
-    websiteUrl,
-    planOrService: getServiceLabel(),
-    notesOrMessage: message,
-    timeline,
-  };
-
-  const mailtoGmail = getMailtoLink(payload);
-  const webGmailLink = getWebGmailLink(payload);
-  const webOutlookLink = getWebOutlookLink(payload);
-  const [mailAppAttempted, setMailAppAttempted] = useState(false);
-
-  const handleLaunchDeviceMail = (e: React.MouseEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMailAppAttempted(true);
-    dispatchMailtoUniversal(mailtoGmail);
+    setError(null);
+    setSubmitted(false);
+    setSuccessDetail(null);
+
+    const formData = new FormData(e.currentTarget);
+    const honeyValue = String(formData.get('_honey') ?? honey);
+
+    // Stop submission if _honey is filled
+    if (honeyValue.trim() !== '') {
+      return;
+    }
+
+    const fieldValues = Object.fromEntries(
+      Array.from(formData.entries()).map(([k, v]) => [k, String(v)])
+    );
+
+    setIsSubmitting(true);
+    try {
+      const result = await submitFormSubmitAjax({
+        ...fieldValues,
+        _honey: honeyValue,
+      });
+
+      if (result.sent) {
+        setName('');
+        setEmail('');
+        setPhone('');
+        setCompany('');
+        setWebsiteUrl('');
+        setTimeline('immediate');
+        setMessage('');
+        setHoney('');
+        setSuccessDetail(result.message ?? null);
+        setSubmitted(true);
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Unable to send your inquiry right now. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -289,7 +310,19 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left: Contact Form */}
           <div className="lg:col-span-7 rounded-2xl border border-neutral-800 bg-neutral-900/70 p-6 sm:p-8 shadow-xl">
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Hidden spam-protection honeypot & selected service */}
+                <input
+                  type="text"
+                  name="_honey"
+                  value={honey}
+                  onChange={(e) => setHoney(e.target.value)}
+                  className="hidden"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                />
+                <input type="hidden" name="service" value={getServiceLabel()} />
                 <div>
                   <h2 className="text-xl font-bold text-white">
                     Send Jacob a Project Inquiry
@@ -375,6 +408,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                     </label>
                     <input
                       id="contact-page-name"
+                      name="name"
                       type="text"
                       required
                       value={name}
@@ -390,6 +424,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                     </label>
                     <input
                       id="contact-page-email"
+                      name="email"
                       type="email"
                       required
                       value={email}
@@ -408,6 +443,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                     </label>
                     <input
                       id="contact-page-url"
+                      name="websiteUrl"
                       type="text"
                       value={websiteUrl}
                       onChange={(e) => setWebsiteUrl(e.target.value)}
@@ -422,6 +458,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                     </label>
                     <input
                       id="contact-page-phone"
+                      name="phone"
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
@@ -436,6 +473,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                     </label>
                     <input
                       id="contact-page-company"
+                      name="company"
                       type="text"
                       value={company}
                       onChange={(e) => setCompany(e.target.value)}
@@ -452,6 +490,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                   </label>
                   <select
                     id="contact-page-timeline"
+                    name="timeline"
                     value={timeline}
                     onChange={(e) => setTimeline(e.target.value)}
                     className="w-full rounded-lg border border-neutral-800 bg-neutral-950 px-3.5 py-2.5 text-xs text-white focus:border-amber-400 focus:outline-none"
@@ -469,6 +508,7 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                   </label>
                   <textarea
                     id="contact-page-msg"
+                    name="message"
                     rows={4}
                     required
                     value={message}
@@ -478,73 +518,48 @@ export function ContactPage({ onNavigateHome, onOpenIntake }: ContactPageProps) 
                   />
                 </div>
 
-                {error && (
-                  <div className="text-xs text-rose-400 bg-rose-950/40 p-3 rounded-lg border border-rose-900">
-                    {error}
+                {submitted && (
+                  <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-700/60 text-xs text-emerald-200 flex items-start gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-semibold text-emerald-300">Project inquiry sent!</div>
+                      <p className="text-emerald-200/80 mt-0.5">
+                        {successDetail ||
+                          'Thank you for reaching out. Jacob has received your details and will reply within 24 hours.'}
+                      </p>
+                    </div>
                   </div>
                 )}
 
-                {/* THE ONLY TWO SEND OPTIONS */}
-                <div className="pt-2 space-y-2.5">
-                  <div className="text-xs font-bold text-neutral-200 uppercase tracking-wider text-center mb-1">
-                    Choose Your Sending Method:
-                  </div>
-
-                  {/* Button 1: Send via Gmail */}
-                  <a
-                    href={webGmailLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full cursor-pointer rounded-xl bg-amber-400 py-3.5 px-4 text-xs font-bold text-neutral-950 hover:bg-amber-300 active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/20 text-center"
-                  >
-                    <Mail className="h-4 w-4" />
-                    <span>Send via Gmail</span>
-                    <span className="text-[11px] font-normal opacity-80">(Opens Web Gmail)</span>
-                  </a>
-
-                  {/* Button 2: Send via Device Mail App */}
-                  <button
-                    type="button"
-                    onClick={handleLaunchDeviceMail}
-                    className="w-full cursor-pointer rounded-xl border border-neutral-700 bg-neutral-900 py-3.5 px-4 text-xs font-bold text-white hover:bg-neutral-800 active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-center shadow-md"
-                  >
-                    <Phone className="h-4 w-4 text-sky-400" />
-                    <span>Send via Mail App on Your Device</span>
-                    <span className="text-[11px] font-normal text-neutral-400">(iPhone, Mac, Android, PC)</span>
-                  </button>
-
-                  {/* Fallback box if computer lacks configured desktop email software */}
-                  {mailAppAttempted && (
-                    <div className="p-3 rounded-xl bg-neutral-900/90 border border-neutral-700 text-xs text-neutral-300 space-y-2 animate-in fade-in">
-                      <div className="flex items-center gap-1.5 text-amber-400 font-medium">
-                        <HelpCircle className="h-3.5 w-3.5" />
-                        Did your device mail app not open?
-                      </div>
-                      <p className="text-[11px] text-neutral-400 leading-relaxed">
-                        Many desktop PCs and browsers don&apos;t have a default email application configured. Click below to open in <strong>Outlook Web</strong> or <strong>Gmail</strong>:
-                      </p>
-                      <div className="flex flex-wrap gap-2 pt-1">
-                        <a
-                          href={webOutlookLink}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs font-medium hover:bg-sky-500/30 transition-colors"
-                        >
-                          <Mail className="h-3.5 w-3.5" />
-                          Open in Outlook Web &rarr;
-                        </a>
-                        <a
-                          href={webGmailLink}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-medium hover:bg-amber-400/30 transition-colors"
-                        >
-                          <Mail className="h-3.5 w-3.5" />
-                          Open in Gmail &rarr;
-                        </a>
-                      </div>
+                {error && (
+                  <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-800/70 text-xs text-rose-200 flex items-start gap-2.5">
+                    <AlertCircle className="h-4 w-4 text-rose-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-semibold text-rose-300">Unable to send message</div>
+                      <p className="text-rose-200/80 mt-0.5">{error}</p>
                     </div>
-                  )}
+                  </div>
+                )}
+
+                {/* Submit Action */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full cursor-pointer rounded-xl bg-amber-400 py-3.5 px-4 text-xs font-bold text-neutral-950 hover:bg-amber-300 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-950/20 text-center"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Sending Project Inquiry...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="h-4 w-4" />
+                        <span>Send Project Inquiry</span>
+                      </>
+                    )}
+                  </button>
                 </div>
 
                 <div className="text-[11px] text-neutral-400 text-center flex flex-wrap items-center justify-center gap-2 pt-2">

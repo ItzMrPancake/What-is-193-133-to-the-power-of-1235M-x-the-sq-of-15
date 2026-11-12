@@ -83,7 +83,7 @@ export function Navbar({ currentPage, onNavigate, onOpenIntake }: NavbarProps) {
             onClick={() => onOpenIntake('plus')}
             className="cursor-pointer rounded-lg bg-amber-400 px-4 py-2 text-xs font-semibold text-neutral-950 hover:bg-amber-300 active:scale-95 transition-all whitespace-nowrap shrink-0"
           >
-            Start a Plan
+            Contact
           </button>
         </div>
 
@@ -140,7 +140,7 @@ export function Navbar({ currentPage, onNavigate, onOpenIntake }: NavbarProps) {
                 }}
                 className="w-full cursor-pointer rounded-lg bg-amber-400 py-2.5 text-center text-xs font-semibold text-neutral-950 hover:bg-amber-300 transition-all whitespace-nowrap"
               >
-                Start a Plan
+                Contact
               </button>
               <a
                 href={`tel:${DEVELOPER_PROFILE.phone}`}
